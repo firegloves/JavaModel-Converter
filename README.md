@@ -55,6 +55,7 @@ transpiled to *Typescript string*
 ----------------------
 
 - java.util.Date
+- java.sql.Date
 - java.sql.Timestamp
 
 transpiled to *Typescript Date*

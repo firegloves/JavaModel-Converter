@@ -32,6 +32,7 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
                 return "string";
 
             case "java.util.Date":
+            case "java.sql.Date":
             case "java.sql.Timestamp":
                 return "Date";
 
