@@ -33,7 +33,7 @@ public class TypescriptFieldConverter extends AFieldConverter {
         if (null != converted && ! converted.isEmpty()) {
             converted = "\t" + field.getName() + ": " + converted + ";";
         } else {
-            converted = this.convertBaseClassField(field);
+            converted = this.convertCollectionOrMapField(field);
         }
 
         if (null == converted) {
@@ -52,7 +52,7 @@ public class TypescriptFieldConverter extends AFieldConverter {
      * @param field the Field to convert to desired language
      * @return received field as string coded in desired language
      */
-    private String convertBaseClassField(Field field) {
+    private String convertCollectionOrMapField(Field field) {
 
         String res = this.convertToArray(field);
 
@@ -109,13 +109,7 @@ public class TypescriptFieldConverter extends AFieldConverter {
 
         // subtype of map
         if (Map.class.isAssignableFrom(field.getType())) {
-
-            String[] paramTypes = this.datatypeConverter.convertParametrizedMapTypes(field);
-            if (null != paramTypes && paramTypes.length == 2) {
-                parametrizedStr = " [name: " + paramTypes[ADatatypeConverter.MAP_KEY] + "]: " + paramTypes[ADatatypeConverter.MAP_KEY];
-            }
-
-            return "\t" + field.getName() + ": {" + parametrizedStr + "};";
+            return "\t" + field.getName() + ": {" + this.datatypeConverter.convertParametrizedMapTypes(field) + "};";
         }
 
         return null;

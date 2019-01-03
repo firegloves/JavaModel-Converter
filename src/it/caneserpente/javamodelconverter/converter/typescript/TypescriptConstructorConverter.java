@@ -41,7 +41,7 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
 
             // generic data type
             if (null == converted || converted.isEmpty()) {
-                sb.append("\t\t" + this.createConstructorBaseClassFieldAssignment(fieldArray[i]) + ";\n");
+                sb.append("\t\t" + this.createCollectionOrMapFieldAssignment(fieldArray[i]) + ";\n");
             } else {
                 sb.append("\t\t" + this.createConstructorFieldAssignment(typeName, fieldArray[i].getName()) + ";\n");
             }
@@ -78,7 +78,7 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
      * @param field the field of which to create assignment constructor instruction in desired language
      * @return the assignment constructor instruction in desired language
      */
-    protected String createConstructorBaseClassFieldAssignment(@Nullable Field field) {
+    protected String createCollectionOrMapFieldAssignment(@Nullable Field field) {
 
         if (null == field) {
             return null;
@@ -87,10 +87,10 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
         String fieldStr = null;
 
         // check for Collection (and subtypes) and Arrays
-        fieldStr = this.createConstructorCollectionOrArrayFieldAssignment(field);
+        fieldStr = this.createCollectionOrArrayFieldAssignment(field);
 
         if (null == fieldStr) {
-            fieldStr = this.createConstructorMapFieldAssignment(field);
+            fieldStr = this.createMapFieldAssignment(field);
         }
 
         return fieldStr;
@@ -103,7 +103,7 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
      * @param field the field of which create constructor's field assignment statement
      * @return constructor's param field assignment statement if field is of type Array or a subtype of Collection, null otherwise
      */
-    private String createConstructorCollectionOrArrayFieldAssignment(Field field) {
+    private String createCollectionOrArrayFieldAssignment(Field field) {
 
         boolean toArray = false;
         String fieldName = field.getName();
@@ -116,7 +116,7 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
         }
 
         // subtype of Collection
-        if (! toArray && Collection.class.isAssignableFrom(field.getType())) {
+        if (!toArray && Collection.class.isAssignableFrom(field.getType())) {
             toArray = true;
 
             if (field.getGenericType() instanceof ParameterizedType) {
@@ -144,20 +144,14 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
      * @param field the field of which create constructor's field assignment statement
      * @return constructor's param field assignment statement if field is of type Map or a subtype of Map, null otherwise
      */
-    private String createConstructorMapFieldAssignment(Field field) {
-
-        String parametrizedStr = "";
+    private String createMapFieldAssignment(Field field) {
 
         // subtype of map
         if (Map.class.isAssignableFrom(field.getType())) {
-
-            String[] paramTypes = this.datatypeConverter.convertParametrizedMapTypes(field);
-            if (null != paramTypes && paramTypes.length == 2) {
-                parametrizedStr = " [name: " + paramTypes[ADatatypeConverter.MAP_KEY] + "]: " + paramTypes[ADatatypeConverter.MAP_KEY];
-            }
+            return "\t" + field.getName() + ": {" + this.datatypeConverter.convertParametrizedMapTypes(field) + "}";
         }
 
-        return "\t" + field.getName() + ": {" + parametrizedStr + "}";
+        return null;
     }
 
 }

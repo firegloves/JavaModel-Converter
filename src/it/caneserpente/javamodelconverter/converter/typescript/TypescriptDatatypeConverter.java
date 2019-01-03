@@ -43,10 +43,9 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
 
 
     @Override
-    public String[] convertParametrizedMapTypes(Field mapField) {
+    public String convertParametrizedMapTypes(Field mapField) {
 
-        String typeName1 = null, typeName2 = null;
-        String[] res = null;
+        String typeName1 = null, typeName2 = null, res = "";
 
         // subtype of map
         if (Map.class.isAssignableFrom(mapField.getType()) && mapField.getGenericType() instanceof ParameterizedType) {
@@ -54,9 +53,9 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
             typeName1 = ((ParameterizedType) mapField.getGenericType()).getActualTypeArguments()[0].getTypeName();
             typeName2 = ((ParameterizedType) mapField.getGenericType()).getActualTypeArguments()[1].getTypeName();
 
-            res = new String[2];
-            res[MAP_KEY] = this.convertDataTypeName(typeName1);
-            res[MAP_VALUE] = this.convertDataTypeName(typeName2);
+            if (null != typeName1 && ! typeName1.isEmpty() && null != typeName2 && ! typeName2.isEmpty()) {
+                res = " [name: " + this.convertDataTypeName(typeName1) + "]: " + this.convertDataTypeName(typeName2);
+            }
         }
 
         return res;

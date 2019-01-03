@@ -6,9 +6,6 @@ import java.lang.reflect.Field;
 
 public abstract class ADatatypeConverter {
 
-    public static final int MAP_KEY = 0;
-    public static final int MAP_VALUE = 1;
-
     /**
      * converts field data type into desired language and returns it
      *
@@ -19,11 +16,10 @@ public abstract class ADatatypeConverter {
 
 
     /**
-     * converts map field parametrized types into desired language types and return them as an array of length 2.
-     * resulting array indices are
+     * converts and returns map field parametrized types into desired language types
      *
-     * @param mapField the Field of which convert parametrized types to desired language, null if field is of raw type
+     * @param mapField the Field of which convert parametrized types to desired language, empty string if field is of raw type
      */
-    public abstract String[] convertParametrizedMapTypes(Field mapField);
+    public abstract String convertParametrizedMapTypes(Field mapField);
 
 }
