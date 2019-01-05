@@ -5,25 +5,28 @@
 
 package it.caneserpente.javamodelconverter;
 
-import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ClassListScanner {
 
-    // TODO pass to relative path
     private String inputDirName = "resources/";
     private String compiledDirName = "resources/compiled";
 
+    private String javacArgsFilePath;
+
     private File inputDir;
     private File compiledDir;
+
+    private JavaCompiler compiler;
+    private List<String> compileFileList;
 
 
     public ClassListScanner(String inputDirName, String compiledDirName) {
@@ -45,6 +48,12 @@ public class ClassListScanner {
         if (!this.compiledDir.exists() || !this.compiledDir.isDirectory()) {
             throw new RuntimeException("Compiled Dir " + this.compiledDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
         }
+
+        this.javacArgsFilePath = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + "argsFile.txt";
+
+        // init compiler
+        compileFileList = new ArrayList<>();
+        compiler = ToolProvider.getSystemJavaCompiler();
     }
 
 
@@ -58,6 +67,7 @@ public class ClassListScanner {
 
         List<String> classNameList = new ArrayList<>();
 
+        // scans files
         String[] fileList = inputDir.list();
         for (int i = 0; i < fileList.length; i++) {
 
@@ -66,6 +76,9 @@ public class ClassListScanner {
                 classNameList.add(clsName);
             }
         }
+
+        // compile files
+        this.compileClasses();
 
         return classNameList;
     }
@@ -113,10 +126,7 @@ public class ClassListScanner {
                 }
             }
 
-            // compile class
-            if (null != retVal && !retVal.isEmpty()) {
-                this.compileClass(fileName);
-            }
+            this.compileFileList.add(clsFile.getAbsolutePath());
 
             return retVal;
 
@@ -128,7 +138,7 @@ public class ClassListScanner {
 
 
     /**
-     * search for the package instruction into the line that receives as param
+     * search for the package instruction into the lthisine that receives as param
      *
      * @param line
      * @return package name or null
@@ -160,26 +170,38 @@ public class ClassListScanner {
     }
 
 
+
+
     /**
-     * compile java file received as param
+     * compile alla identified java files
      *
-     * @param fileName
      */
-    private void compileClass(@NotNull String fileName) {
+    private void compileClasses() {
 
-        // Compile source file.
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        // write args file
+        this.writeJavacArgsFile();
 
-        // javac does not permit to choose output folder without creating all package hierarchy
-        // so i choose to craete .class in the same folder of the source file and then to copy in che compiled folder
+        // compile
         compiler.run(null, null, null,
-                "-d", this.compiledDir.getAbsolutePath(), this.inputDir.getAbsolutePath() + System.getProperty("file.separator") + fileName);
+                "-d", this.compiledDir.getAbsolutePath(),    // output folder
+                "-cp", this.inputDir.getAbsolutePath(),                 // classpath
+                "@" + javacArgsFilePath                                 // javac argsFile
+        );
 
-//        compiler.run(null, null, null, this.inputDir.getAbsolutePath() + System.getProperty("file.separator") + fileName);
-//
-//        File compFile = new File(this.inputDir.getAbsolutePath() + System.getProperty("file.separator") + fileName.replace(".java", ".class"));
-//        if (null != compFile && compFile.exists()) {
-//            compFile.renameTo(new File(this.compiledDir.getAbsolutePath() + System.getProperty("file.separator") + fileName.replace(".java", ".class")));
-//        }
+    }
+
+
+    /**
+     * create and save javac argsFile into system temp directory
+     * @return
+     */
+    private void writeJavacArgsFile() {
+
+        // Save file
+        try (Writer writer = new FileWriter(this.javacArgsFilePath)) {
+            writer.write(this.compileFileList.stream().collect(Collectors.joining("\n")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
