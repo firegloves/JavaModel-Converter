@@ -18,6 +18,7 @@ public class JavaFieldReader {
     public JavaFieldReader(ADatatypeConverter datatypeConverter) {
         this.datatypeConverter = datatypeConverter;
 
+        // TODO SPOSTARE TUTTO NEI COSTRUTTORI? O DIRETTAMENTE NEI METODI DI CREAZIONE E RISPARMIO TEMPO
         this.strategyMap = new HashMap<>();
         this.strategyMap.put(JavaFieldBasic.class, (Function<JavaFieldBasic, JavaField>) jf -> this.populateJavaFieldBasic(jf));
         this.strategyMap.put(JavaFieldArray.class, (Function<JavaFieldArray, JavaField>) jf -> this.populateJavaFieldArray(jf));
@@ -85,7 +86,6 @@ public class JavaFieldReader {
 
         // map
         if (Map.class.isAssignableFrom(type)) {
-            // TODO aggiustare
             return new JavaFieldMap(f);
         }
 
@@ -97,29 +97,44 @@ public class JavaFieldReader {
         throw new JMCException("TYPE NOT SUPPORTED: " + f.getGenericType().getTypeName());
     }
 
-
-    private JavaField populateJavaFieldBasic(JavaField jf) {
+    /**
+     * populates JavaFieldBasic
+     * @param jf the JavaFieldBasic to populate
+     * @return JavaField populated
+     */
+    private JavaField populateJavaFieldBasic(JavaFieldBasic jf) {
         System.out.println("populateJavaField " + jf.getJavaField().getGenericType().getTypeName());
-//        jf.setJavaTypeName(jf.getJavaField().getGenericType().getTypeName());
         return jf;
     }
 
+    /**
+     * populates JavaFieldArray
+     * @param jf the JavaFieldArray to populate
+     * @return JavaField populated
+     */
     private JavaField populateJavaFieldArray(JavaFieldArray jf) {
-        System.out.println("populateJavaFieldArray");
         jf.setJavaSubtypeName(jf.getJavaField().getType().getComponentType().getTypeName());
         return jf;
     }
 
+    /**
+     * populates JavaFieldCollection
+     * @param jf the JavaFieldCollection to populate
+     * @return JavaField populated
+     */
     private JavaField populateJavaFieldCollection(JavaFieldCollection jf) {
-        System.out.println("populateJavaFieldCollection");
         if (jf.getJavaField().getGenericType() instanceof ParameterizedType) {
             jf.setJavaSubtypeName(((ParameterizedType) jf.getJavaField().getGenericType()).getActualTypeArguments()[0].getTypeName());
         }
         return jf;
     }
 
+    /**
+     * populates JavaFieldMap
+     * @param jf the JavaFieldMap to populate
+     * @return JavaField populated
+     */
     private JavaField populateJavaFieldMap(JavaFieldMap jf) {
-        System.out.println("populateJavaFieldMap");
         if (jf.getJavaField().getGenericType() instanceof ParameterizedType) {
             jf.setJavaSubtypeKeyName(((ParameterizedType) jf.getJavaField().getGenericType()).getActualTypeArguments()[0].getTypeName());
             jf.setJavaSubtypeValue(((ParameterizedType) jf.getJavaField().getGenericType()).getActualTypeArguments()[1].getTypeName());
