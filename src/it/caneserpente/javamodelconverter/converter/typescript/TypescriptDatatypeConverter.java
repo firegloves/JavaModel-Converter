@@ -37,7 +37,7 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
                 return "Date";
 
             default:
-                return "";
+                return null;
         }
     }
 

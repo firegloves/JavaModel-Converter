@@ -18,7 +18,7 @@ public class TypescriptClassConverter extends AClassConverter {
      * @param outputDir : directory where to write generated files. if null resources/generated directory is choosen
      */
     public TypescriptClassConverter(String inputDir, String outputDir, ADatatypeConverter datatypeConverter) {
-        super(inputDir, outputDir, new TypescriptConstructorConverter(datatypeConverter), new TypescriptFieldConverter(datatypeConverter));
+        super(inputDir, outputDir, new TypescriptConstructorConverter(datatypeConverter), new TypescriptFieldConverter(datatypeConverter), datatypeConverter);
         this.datatypeConverter = datatypeConverter;
     }
 

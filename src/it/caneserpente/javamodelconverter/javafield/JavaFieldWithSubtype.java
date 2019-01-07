@@ -1,14 +1,28 @@
 package it.caneserpente.javamodelconverter.javafield;
 
+import java.lang.reflect.Field;
+
 public class JavaFieldWithSubtype extends JavaField {
 
-    private JavaField subType;
+    private String javaSubtypeName;
 
-    public JavaField getSubType() {
-        return subType;
+    public JavaFieldWithSubtype(Field javaField) {
+        super(javaField);
     }
 
-    public void setSubType(JavaField subType) {
-        this.subType = subType;
+    public String getJavaSubtypeName() {
+        return javaSubtypeName;
+    }
+
+    public void setJavaSubtypeName(String javaSubtypeName) {
+        this.javaSubtypeName = javaSubtypeName;
+    }
+
+    @Override
+    public String toString() {
+        return "JavaFieldWithSubtype{" +
+                "super='" + super.toString() + '\'' +
+                "javaSubtypeName='" + javaSubtypeName + '\'' +
+                '}';
     }
 }

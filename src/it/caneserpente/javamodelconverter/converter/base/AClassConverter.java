@@ -3,6 +3,7 @@
 package it.caneserpente.javamodelconverter.converter.base;
 
 import com.sun.istack.internal.Nullable;
+import it.caneserpente.javamodelconverter.JavaFieldReader;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -22,7 +23,9 @@ public abstract class AClassConverter {
     protected AConstructorConverter constructorConverter;
     protected AFieldConverter fieldConverter;
 
-    public AClassConverter(String inputDir, String outputDir, AConstructorConverter constructorConverter, AFieldConverter fieldConverter) {
+    private JavaFieldReader fieldReader;
+
+    public AClassConverter(String inputDir, String outputDir, AConstructorConverter constructorConverter, AFieldConverter fieldConverter, ADatatypeConverter datatypeConverter) {
 
         // input dir
         if (null != inputDir && !inputDir.isEmpty()) {
@@ -42,6 +45,9 @@ public abstract class AClassConverter {
             throw new RuntimeException("Input Dir " + this.outputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
         }
 
+        // field reader
+        this.fieldReader = new JavaFieldReader(datatypeConverter);
+
         // sub converters
         this.constructorConverter = constructorConverter;
         this.fieldConverter = fieldConverter;
@@ -58,7 +64,8 @@ public abstract class AClassConverter {
         if (null != fqNameList) {
             for (int i = 0; i < fqNameList.size(); i++) {
                 Class clz = this.loadClass(fqNameList.get(i));
-                this.convertClass(clz);
+                this.fieldReader.readClassFields(clz);
+//                this.convertClass(clz);
             }
         }
     }

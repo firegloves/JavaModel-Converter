@@ -8,6 +8,11 @@ public class JavaField {
     private String javaTypeName;
     private String convertedFieldType;      // TODO METTERE NEL DTO DI USCITA?
 
+    public JavaField(Field javaField) {
+        this.javaField = javaField;
+        this.javaTypeName = this.javaField.getGenericType().getTypeName();
+    }
+
     public Field getJavaField() {
         return javaField;
     }
@@ -20,9 +25,9 @@ public class JavaField {
         return javaTypeName;
     }
 
-    public void setJavaTypeName(String javaTypeName) {
-        this.javaTypeName = javaTypeName;
-    }
+//    public void setJavaTypeName(String javaTypeName) {
+//        this.javaTypeName = javaTypeName;
+//    }
 
     public String getConvertedFieldType() {
         return convertedFieldType;
@@ -30,5 +35,14 @@ public class JavaField {
 
     public void setConvertedFieldType(String convertedFieldType) {
         this.convertedFieldType = convertedFieldType;
+    }
+
+    @Override
+    public String toString() {
+        return "JavaField{" +
+                "javaField=" + javaField +
+                ", javaTypeName='" + javaTypeName + '\'' +
+                ", convertedFieldType='" + convertedFieldType + '\'' +
+                '}';
     }
 }
