@@ -1,14 +1,18 @@
-package it.caneserpente.javamodelconverter.javafield;
+package it.caneserpente.javamodelconverter.model;
 
 import java.lang.reflect.Field;
 
-public class JavaField {
+public class JMCField {
 
     private Field javaField;
     private String javaTypeName;
-    private String convertedFieldType;      // TODO METTERE NEL DTO DI USCITA?
 
-    public JavaField(Field javaField) {
+    // CONVERTED FIELDS
+    private String convertedFieldType;
+    private String convertedFieldStm;
+    private String convertedContructorFieldStm;
+
+    public JMCField(Field javaField) {
         this.javaField = javaField;
         this.javaTypeName = this.javaField.getGenericType().getTypeName();
     }
@@ -25,10 +29,6 @@ public class JavaField {
         return javaTypeName;
     }
 
-//    public void setJavaTypeName(String javaTypeName) {
-//        this.javaTypeName = javaTypeName;
-//    }
-
     public String getConvertedFieldType() {
         return convertedFieldType;
     }
@@ -37,12 +37,29 @@ public class JavaField {
         this.convertedFieldType = convertedFieldType;
     }
 
+    public String getConvertedFieldStm() {
+        return convertedFieldStm;
+    }
+
+    public void setConvertedFieldStm(String convertedFieldStm) {
+        this.convertedFieldStm = convertedFieldStm;
+    }
+
+    public String getConvertedContructorFieldStm() {
+        return convertedContructorFieldStm;
+    }
+
+    public void setConvertedContructorFieldStm(String convertedContructorFieldStm) {
+        this.convertedContructorFieldStm = convertedContructorFieldStm;
+    }
+
     @Override
     public String toString() {
-        return "JavaField{" +
+        return "JMCField{" +
                 "javaField=" + javaField +
                 ", javaTypeName='" + javaTypeName + '\'' +
                 ", convertedFieldType='" + convertedFieldType + '\'' +
+                ", convertedFieldStm='" + convertedFieldStm + '\'' +
                 '}';
     }
 }

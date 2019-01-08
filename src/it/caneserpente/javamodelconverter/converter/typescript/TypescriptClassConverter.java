@@ -3,6 +3,7 @@ package it.caneserpente.javamodelconverter.converter.typescript;
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
+import it.caneserpente.javamodelconverter.model.JMCClass;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -23,21 +24,34 @@ public class TypescriptClassConverter extends AClassConverter {
     }
 
     @Override
-    protected String convertClassName(@Nullable Class clz) {
-        return null != clz ? clz.getSimpleName() : null;
+    protected JMCClass convertClassName(@Nullable JMCClass clz) {
+        if (null != clz) {
+            clz.setConvertedClassName(clz.getClazz().getSimpleName());
+        }
+        return clz;
     }
 
 
     @Override
-    protected void writeGeneratedClass(String clzName, String fields, String constructor) {
+    protected void writeGeneratedClass(@Nullable JMCClass clz) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("export class " + clzName + "{ ").append("\n\n")
-                .append(fields).append("\n\n")
-                .append(constructor).append("\n\n")
-                .append("}");
 
-        try (PrintWriter writer = new PrintWriter(new File(super.outputDir.getAbsolutePath() + System.getProperty("file.separator") + clzName + ".ts"))) {
+        // open class block
+        sb.append("export class " + clz.getConvertedClassName() + " {").append("\n\n");
+
+        // fields
+        clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedFieldStm()));
+
+        // constructor
+        sb.append("\n\n" + clz.getConvertedConstructorInit());
+        clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedContructorFieldStm()));
+        sb.append("\t}\n\n");
+
+        // close class block
+        sb.append("}");
+
+        try (PrintWriter writer = new PrintWriter(new File(super.outputDir.getAbsolutePath() + System.getProperty("file.separator") + clz.getConvertedClassName() + ".ts"))) {
             writer.println(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,6 +4,8 @@ package it.caneserpente.javamodelconverter.converter.base;
 
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
+import it.caneserpente.javamodelconverter.model.JMCClass;
+import it.caneserpente.javamodelconverter.model.JMCField;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -63,9 +65,9 @@ public abstract class AClassConverter {
 
         if (null != fqNameList) {
             for (int i = 0; i < fqNameList.size(); i++) {
-                Class clz = this.loadClass(fqNameList.get(i));
-                this.fieldReader.readClassFields(clz);
-//                this.convertClass(clz);
+                JMCClass clz = this.loadClass(fqNameList.get(i));
+                clz = this.fieldReader.readClassFields(clz);
+                this.convertClass(clz);
             }
         }
     }
@@ -74,9 +76,9 @@ public abstract class AClassConverter {
      * load one class from inputDirName and returns it
      *
      * @param className the class' full qualified name to load
-     * @return loaded class
+     * @return loaded class wrapped into JMCClass
      */
-    private Class loadClass(String className) {
+    private JMCClass loadClass(String className) {
 
         try {
             // Convert File to a URL
@@ -86,7 +88,7 @@ public abstract class AClassConverter {
             // Create a new class loader with the directory
             ClassLoader cl = new URLClassLoader(urls);
 
-            return cl.loadClass(className);
+            return new JMCClass(cl.loadClass(className));
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -103,42 +105,39 @@ public abstract class AClassConverter {
      *
      * @param clz class to convert
      */
-    private void convertClass(@Nullable Class clz) {
+    private void convertClass(@Nullable JMCClass clz) {
 
         if (null != clz) {
 
             // generate fields
-            Field[] fieldArray = clz.getDeclaredFields();
-            String fields = this.fieldConverter.convertFieldList(fieldArray);
+            this.fieldConverter.convertFieldList(clz.getFieldList());
 
             // generate class name
-            String clzName = this.convertClassName(clz);
+            this.convertClassName(clz);
 
             // generate constructor
-            String constructor = this.constructorConverter.createConstructor(clzName, fieldArray);
+            this.constructorConverter.createConstructor(clz);
 
             // write class
-            this.writeGeneratedClass(clzName, fields, constructor);
+            this.writeGeneratedClass(clz);
         }
     }
 
 
     /**
-     * converts class name into desired language and return it as String
+     * converts class name into desired language and set it into received JMCClass
      *
-     * @param clz the Class from which get name to convert
-     * @return class name converted into desired language
+     * @param clz the JMCClass from which get name to convert
+     * @return JMCClass with name converted into desired language
      */
-    protected abstract String convertClassName(@Nullable Class clz);
+    protected abstract JMCClass convertClassName(@Nullable JMCClass clz);
 
 
 
     /**
      * construct ang write class name into desired language
      *
-     * @param clzName the name to assign to the new class
-     * @param fields string representing fields list
-     * @param constructor string representing class constructor
+     * @param clz the JMCClass of which generate code
      */
-    protected abstract void writeGeneratedClass(String clzName, String fields, String constructor);
+    protected abstract void writeGeneratedClass(@Nullable JMCClass clz);
 }

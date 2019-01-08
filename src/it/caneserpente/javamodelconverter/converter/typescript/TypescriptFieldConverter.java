@@ -1,15 +1,16 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import it.caneserpente.javamodelconverter.JavaModelConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.converter.base.AFieldConverter;
+import it.caneserpente.javamodelconverter.model.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
 public class TypescriptFieldConverter extends AFieldConverter {
 
@@ -23,96 +24,39 @@ public class TypescriptFieldConverter extends AFieldConverter {
 
 
     @Override
-    protected String convertField(@Nullable Field field) {
+    protected JMCField setConvertedFieldStatement(@NotNull JMCField jf) {
 
-        if (null == field) return null;
+        // set converted statement
+        jf.setConvertedFieldStm("\t" + jf.getJavaField().getName() + ": " + jf.getConvertedFieldType() + ";\n");
 
-        String typeName = field.getGenericType().getTypeName();
-        String converted = this.datatypeConverter.convertDataTypeName(typeName);
+        return jf;
+    }
 
-        if (null != converted && ! converted.isEmpty()) {
-            converted = "\t" + field.getName() + ": " + converted + ";";
-        } else {
-            converted = this.convertCollectionOrMapField(field);
-        }
 
-        if (null == converted) {
-            System.out.println("** TYPE UNRECOGNIZED: " + field.getGenericType().getTypeName());
+    @Override
+    protected String convertJMCFieldBasic(JMCFieldBasic jf) {
+        return this.datatypeConverter.convertDataTypeName(jf.getJavaTypeName());
+    }
+
+    @Override
+    protected String convertJMCFieldArray(JMCFieldArray jf) {
+        return this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeName()) + "[]";
+    }
+
+    @Override
+    protected String convertJMCFieldCollection(JMCFieldCollection jf) {
+        return this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeName()) + "[]";
+    }
+
+    @Override
+    protected String convertJMCFieldMap(JMCFieldMap jf) {
+
+        String converted = "Map";
+
+        if (jf.isParametrized()) {
+            converted += "<" + this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeKeyName()) + ", " + this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeValueName()) + ">";
         }
 
         return converted;
     }
-
-
-
-    /**
-     * converts field received into desired language and return it as String
-     * this method check if field is a subtype of a base type
-     *
-     * @param field the Field to convert to desired language
-     * @return received field as string coded in desired language
-     */
-    private String convertCollectionOrMapField(Field field) {
-
-        String res = this.convertToArray(field);
-
-        if (null == res) {
-            res = this.convertFromMap(field);
-        }
-
-        return res;
-    }
-
-
-    /**
-     * try to converts received field into Typescript array if field type is compatible
-     * @param field the Field to convert to desired language
-     * @return received field as string coded in desired language, null if Field is not compatible with Typescript array
-     */
-    private String convertToArray(Field field) {
-
-        boolean toArray = false;
-        String typeName = null, typescriptTypeName = "";
-
-        // Array
-        if (field.getType().isArray()) {
-            toArray = true;
-            typeName = field.getType().getComponentType().getTypeName();
-        }
-
-        // subtype of Collection
-        if (Collection.class.isAssignableFrom(field.getType())) {
-            toArray = true;
-
-            if (field.getGenericType() instanceof ParameterizedType) {
-                typeName = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getTypeName();
-            }
-        }
-
-        if (! toArray) {
-            return null;
-        } else {
-            typescriptTypeName = this.datatypeConverter.convertDataTypeName(typeName);
-            return "\t" + field.getName() + ": " + typescriptTypeName + "[];";
-        }
-    }
-
-
-    /**
-     * try to converts received field into Typescript Tuple (map) if field type is compatible
-     * @param field the Field to convert to desired language
-     * @return received field as string coded in desired language, null if Field is not compatible with Typescript Tuple
-     */
-    private String convertFromMap(Field field) {
-
-        String parametrizedStr = "";
-
-        // subtype of map
-        if (Map.class.isAssignableFrom(field.getType())) {
-            return "\t" + field.getName() + ": {" + this.datatypeConverter.convertParametrizedMapTypes(field) + "};";
-        }
-
-        return null;
-    }
-
 }

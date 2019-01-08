@@ -8,6 +8,8 @@ import java.util.List;
 
 public class JavaModelConverter {
 
+    public static final boolean DEBUG = true;
+
     public static void main(String[] args) {
 
         ADatatypeConverter datatypeConverter = new TypescriptDatatypeConverter();

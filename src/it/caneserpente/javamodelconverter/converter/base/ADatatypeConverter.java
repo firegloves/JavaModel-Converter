@@ -20,6 +20,6 @@ public abstract class ADatatypeConverter {
      *
      * @param mapField the Field of which convert parametrized types to desired language, empty string if field is of raw type
      */
-    public abstract String convertParametrizedMapTypes(Field mapField);
+//    public abstract String convertParametrizedMapTypes(Field mapField);
 
 }

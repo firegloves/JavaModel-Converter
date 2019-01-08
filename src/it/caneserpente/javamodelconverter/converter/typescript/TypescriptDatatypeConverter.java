@@ -42,23 +42,23 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
     }
 
 
-    @Override
-    public String convertParametrizedMapTypes(Field mapField) {
-
-        String typeName1 = null, typeName2 = null, res = "";
-
-        // subtype of map
-        if (Map.class.isAssignableFrom(mapField.getType()) && mapField.getGenericType() instanceof ParameterizedType) {
-
-            typeName1 = ((ParameterizedType) mapField.getGenericType()).getActualTypeArguments()[0].getTypeName();
-            typeName2 = ((ParameterizedType) mapField.getGenericType()).getActualTypeArguments()[1].getTypeName();
-
-            if (null != typeName1 && ! typeName1.isEmpty() && null != typeName2 && ! typeName2.isEmpty()) {
-                res = " [name: " + this.convertDataTypeName(typeName1) + "]: " + this.convertDataTypeName(typeName2);
-            }
-        }
-
-        return res;
-    }
+//    @Override
+//    public String convertParametrizedMapTypes(Field mapField) {
+//
+//        String typeName1 = null, typeName2 = null, res = "";
+//
+//        // subtype of map
+//        if (Map.class.isAssignableFrom(mapField.getType()) && mapField.getGenericType() instanceof ParameterizedType) {
+//
+//            typeName1 = ((ParameterizedType) mapField.getGenericType()).getActualTypeArguments()[0].getTypeName();
+//            typeName2 = ((ParameterizedType) mapField.getGenericType()).getActualTypeArguments()[1].getTypeName();
+//
+//            if (null != typeName1 && ! typeName1.isEmpty() && null != typeName2 && ! typeName2.isEmpty()) {
+//                res = " [name: " + this.convertDataTypeName(typeName1) + "]: " + this.convertDataTypeName(typeName2);
+//            }
+//        }
+//
+//        return res;
+//    }
 
 }
