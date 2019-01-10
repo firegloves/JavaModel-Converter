@@ -36,6 +36,22 @@ public class JMCFieldMap extends JMCField {
         this.javaSubtypeValueName = javaSubtypeValueName;
     }
 
+    public String getConvertedFieldKeyType() {
+        return convertedFieldKeyType;
+    }
+
+    public void setConvertedFieldKeyType(String convertedFieldKeyType) {
+        this.convertedFieldKeyType = convertedFieldKeyType;
+    }
+
+    public String getConvertedFieldValueType() {
+        return convertedFieldValueType;
+    }
+
+    public void setConvertedFieldValueType(String convertedFieldValueType) {
+        this.convertedFieldValueType = convertedFieldValueType;
+    }
+
     public boolean isParametrized() {
         return null != javaSubtypeKeyName && ! javaSubtypeKeyName.isEmpty() && null != javaSubtypeValueName && ! javaSubtypeValueName.isEmpty();
     }

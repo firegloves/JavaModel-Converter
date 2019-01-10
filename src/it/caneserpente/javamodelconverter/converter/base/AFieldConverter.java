@@ -17,10 +17,10 @@ public abstract class AFieldConverter {
 
     public AFieldConverter() {
         this.strategyMap = new HashMap<>();
-        this.strategyMap.put(JMCFieldBasic.class, (Function<JMCFieldBasic, String>) jf -> this.convertJMCFieldBasic(jf));
-        this.strategyMap.put(JMCFieldArray.class, (Function<JMCFieldArray, String>) jf -> this.convertJMCFieldArray(jf));
-        this.strategyMap.put(JMCFieldCollection.class, (Function<JMCFieldCollection, String>) jf -> this.convertJMCFieldCollection(jf));
-        this.strategyMap.put(JMCFieldMap.class, (Function<JMCFieldMap, String>) jf -> this.convertJMCFieldMap(jf));
+        this.strategyMap.put(JMCFieldBasic.class, (Function<JMCFieldBasic, JMCField>) jf -> this.convertJMCFieldBasic(jf));
+        this.strategyMap.put(JMCFieldArray.class, (Function<JMCFieldArray, JMCField>) jf -> this.convertJMCFieldArray(jf));
+        this.strategyMap.put(JMCFieldCollection.class, (Function<JMCFieldCollection, JMCField>) jf -> this.convertJMCFieldCollection(jf));
+        this.strategyMap.put(JMCFieldMap.class, (Function<JMCFieldMap, JMCField>) jf -> this.convertJMCFieldMap(jf));
     }
 
     /**
@@ -31,18 +31,14 @@ public abstract class AFieldConverter {
      */
     public List<JMCField> convertFieldList(@Nullable List<JMCField> fieldList) {
 
-//        StringBuilder fieldsBuilder = new StringBuilder();
-
         if (null != fieldList) {
             fieldList.stream().forEach(f -> this.convertField(f));
-//            for (int i=0; i<fieldArray.length; i++) {
-//                fieldsBuilder.append(this.convertField(fieldArray[i])).append("\n");
-//            }
         }
 
         return fieldList;
     }
 
+    // TODO sistemare documentazione metodi da estendere
 
 
     /**
@@ -56,7 +52,7 @@ public abstract class AFieldConverter {
         if (null != jf) {
 
             // converts typename
-            jf.setConvertedFieldType((String) this.strategyMap.get(jf.getClass()).apply(jf));
+            this.strategyMap.get(jf.getClass()).apply(jf);
 
             // set converted filed statement
             this.setConvertedFieldStatement(jf);
@@ -71,7 +67,8 @@ public abstract class AFieldConverter {
 
 
     /**
-     * sets JMCField convertedFieldStm variable converting it into desired language
+     * converts
+     * sets JMCField ConvertedFieldType variable converting it into desired language
      * @param jf the JMCField of which set convertedFieldStm variable into desired language
      * @return updated
      */
@@ -83,27 +80,27 @@ public abstract class AFieldConverter {
      * @param jf the JMCFieldBasic to convert
      * @return JMCField converted
      */
-    protected abstract String convertJMCFieldBasic(JMCFieldBasic jf);
+    protected abstract JMCField convertJMCFieldBasic(JMCFieldBasic jf);
 
     /**
      * converts JMCFieldArray
      * @param jf the JMCFieldArray to convert
      * @return JMCField converted
      */
-    protected abstract String convertJMCFieldArray(JMCFieldArray jf);
+    protected abstract JMCField convertJMCFieldArray(JMCFieldArray jf);
 
     /**
      * converts JMCFieldCollection
      * @param jf the JMCFieldCollection to convert
      * @return JMCField converted
      */
-    protected abstract String convertJMCFieldCollection(JMCFieldCollection jf);
+    protected abstract JMCField convertJMCFieldCollection(JMCFieldCollection jf);
 
     /**
      * converts JMCFieldMap
      * @param jf the JMCFieldMap to convert
      * @return JMCField converted
      */
-    protected abstract String convertJMCFieldMap(JMCFieldMap jf);
+    protected abstract JMCField convertJMCFieldMap(JMCFieldMap jf);
 
 }

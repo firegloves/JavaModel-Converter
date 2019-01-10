@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 public class TypescriptFieldConverter extends AFieldConverter {
 
-    private final List<String> NO_CONSTRUCTOR_DATA_TYPES = Arrays.asList("number", "string", "String", "boolean", "Boolean");
+//    private final List<String> NO_CONSTRUCTOR_DATA_TYPES = Arrays.asList("number", "string", "String", "boolean", "Boolean");
 
     private ADatatypeConverter datatypeConverter;
 
@@ -34,29 +34,38 @@ public class TypescriptFieldConverter extends AFieldConverter {
 
 
     @Override
-    protected String convertJMCFieldBasic(JMCFieldBasic jf) {
-        return this.datatypeConverter.convertDataTypeName(jf.getJavaTypeName());
+    protected JMCField convertJMCFieldBasic(JMCFieldBasic jf) {
+        jf.setConvertedFieldType(this.datatypeConverter.convertDataTypeName(jf.getJavaTypeName()));
+        return jf;
     }
 
     @Override
-    protected String convertJMCFieldArray(JMCFieldArray jf) {
-        return this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeName()) + "[]";
+    protected JMCField convertJMCFieldArray(JMCFieldArray jf) {
+        jf.setConvertedSubtype(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeName()));
+        jf.setConvertedFieldType(jf.getConvertedSubtype() + "[]");
+        return jf;
     }
 
     @Override
-    protected String convertJMCFieldCollection(JMCFieldCollection jf) {
-        return this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeName()) + "[]";
+    protected JMCField convertJMCFieldCollection(JMCFieldCollection jf) {
+        jf.setConvertedSubtype(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeName()));
+        jf.setConvertedFieldType(jf.getConvertedSubtype() + "[]");
+        return jf;
     }
 
     @Override
-    protected String convertJMCFieldMap(JMCFieldMap jf) {
+    protected JMCField convertJMCFieldMap(JMCFieldMap jf) {
 
         String converted = "Map";
 
         if (jf.isParametrized()) {
-            converted += "<" + this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeKeyName()) + ", " + this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeValueName()) + ">";
+            jf.setConvertedFieldKeyType(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeKeyName()));
+            jf.setConvertedFieldValueType(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeValueName()));
+            converted += "<" + jf.getConvertedFieldKeyType() + ", " + jf.getConvertedFieldValueType()  + ">";
         }
 
-        return converted;
+        jf.setConvertedFieldType(converted);
+
+        return jf;
     }
 }
