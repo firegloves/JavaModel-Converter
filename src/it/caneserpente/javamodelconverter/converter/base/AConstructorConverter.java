@@ -5,7 +5,6 @@ package it.caneserpente.javamodelconverter.converter.base;
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.model.*;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;

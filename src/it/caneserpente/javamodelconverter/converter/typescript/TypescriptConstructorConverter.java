@@ -5,10 +5,8 @@ import it.caneserpente.javamodelconverter.converter.base.AConstructorConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.model.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.List;
 
 public class TypescriptConstructorConverter extends AConstructorConverter {
 
@@ -38,18 +36,6 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
     }
 
 
-//    @Override
-//    protected JMCField createConstructorFieldAssignment(@Nullable JMCField jf) {
-//
-//        if (null != jf) {
-//            // create constructor assignment statement
-//            jf.setConvertedContructorFieldStm((String) this.strategyMap.get(jf.getClass()).apply(jf));
-//        }
-//
-//        return jf;
-//    }
-
-
     @Override
     protected String createConstrJMCFieldBasic(JMCFieldBasic jf) {
 
@@ -66,23 +52,12 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
 
     @Override
     protected String createConstrJMCFieldArray(JMCFieldArray jf) {
-
-        if (null == jf.getConvertedSubtype() || jf.getConvertedSubtype().isEmpty() || NO_CONSTRUCTOR_DATA_TYPES.contains(jf.getConvertedSubtype())) {
-            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + ";\n";
-        } else {
-            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + " ? m." + jf.getJavaField().getName() + ".map(s => new " + jf.getConvertedSubtype() + "(s)) : [];\n";
-        }
+        return this.createConstrJMCFieldArrayOrCollection(jf);
     }
 
     @Override
     protected String createConstrJMCFieldCollection(JMCFieldCollection jf) {
-        // TODO REFACTOR - EQUAL METHODS
-
-        if (null == jf.getConvertedSubtype() || jf.getConvertedSubtype().isEmpty() || NO_CONSTRUCTOR_DATA_TYPES.contains(jf.getConvertedSubtype())) {
-            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + ";\n";
-        } else {
-            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + " ? m." + jf.getJavaField().getName() + ".map(s => new " + jf.getConvertedSubtype() + "(s)) : [];\n";
-        }
+        return this.createConstrJMCFieldArrayOrCollection(jf);
     }
 
     @Override
@@ -109,78 +84,26 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
                 convertedValue = "m.get(k)";
             }
 
-            converted += "\t\t\tm.set(" + convertedValue + ", " + convertedValue + ");\n";
+            converted += "\t\t\tm.set(" + convertedKey + ", " + convertedValue + ");\n";
             converted += "\t\t};\n";
         }
 
         return converted;
     }
 
-//    // Import stylesheets
-//import './style.css';
-//
-//    class Dog {
-//        id: number;
-//        name: string;
-//    }
-//
-//// Write TypeScript code!
-//const appDiv: HTMLElement = document.getElementById('app');
-//    appDiv.innerHTML = `<h1>TypeScript Starter</h1>`;
-//
-//    let rawMap = new Map();
-//rawMap.set(1, 'ciao');
-//rawMap.set(2, 'core');
-//rawMap.set(3, 'pupazzo');
-//
-//    let rawMap2 = rawMap;
-//
-////console.log(rawMap2.get(3));
-//
-//
-//    let mappone = new Map<Date, Dog>();
-//
-//    let data1 = new Date();
-//    let gelsa = new Dog();
-//    gelsa.id = 1;
-//    gelsa.name = 'Gelsomina';
-//
-//    let data2 = new Date();
-//data2.setFullYear(2020);
-//    let alfredo = new Dog();
-//    alfredo.id = 2;
-//    alfredo.name = 'Alfredo';
-//
-//mappone.set(data1, gelsa);
-//mappone.set(data2, alfredo);
-//
-//console.log("MAPPONA")
-//
-///*for (let [key, value] of mappone) {
-//    console.log(key, value);
-//}*/
-//
-////console.log(mappone.get(data1));
-//
-//
-//    let mappone2 = new Map<Date, Dog>();
-////console.log(mappone)
-//for (let k of mappone.keys()) {
-//        console.log('e: '  + k);
-//    }
-//
-//
-//    let map = new Map([
-//    [ "APPLE", 1 ],
-//            [ "ORANGE", 2 ],
-//            [ "MANGO", 3 ]
-//            ]);
-//
-//console.log("MAP")
-//        for (let [key, value] of map) {
-//        console.log(key, value);
-//    }
-//
-//console.log('ENDs')
 
+
+    /**
+     * converts JMCFieldWithSubtype
+     *
+     * @param jf the JMCFieldWithSubtype to convert
+     * @return JMCField converted
+     */
+    private String createConstrJMCFieldArrayOrCollection(JMCFieldWithSubtype jf) {
+        if (null == jf.getConvertedSubtype() || jf.getConvertedSubtype().isEmpty() || NO_CONSTRUCTOR_DATA_TYPES.contains(jf.getConvertedSubtype())) {
+            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + ";\n";
+        } else {
+            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + " ? m." + jf.getJavaField().getName() + ".map(s => new " + jf.getConvertedSubtype() + "(s)) : [];\n";
+        }
+    }
 }

@@ -5,10 +5,8 @@ package it.caneserpente.javamodelconverter.converter.base;
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.model.JMCClass;
-import it.caneserpente.javamodelconverter.model.JMCField;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
