@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TypescriptConstructorConverter extends AConstructorConverter {
 
-    private final List<String> NO_CONSTRUCTOR_DATA_TYPES = Arrays.asList("number", "string", "String", "boolean", "Boolean");
+    private final List<String> NO_CONSTRUCTOR_DATA_TYPES = Arrays.asList("number", "string", "String", "boolean", "Boolean", "any");
 
     /**
      * constructor
@@ -25,11 +25,14 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
     public JMCClass createConstructor(@Nullable JMCClass clz) {
 
         if (null != clz) {
-            clz.setConvertedConstructorInit("\tconstructor()\n" +
+            clz.setConvertedConstructorStart("\tconstructor()\n" +
                     "\tconstructor(m: " + clz.getConvertedClassName() + ")\n" +
-                    "\tconstructor(m?: " + clz.getConvertedClassName() + ") {\n");
+                    "\tconstructor(m?: " + clz.getConvertedClassName() + ") {\n\n" +
+                    "\t\tif (m) {\n");
 
             clz.getFieldList().stream().forEach(f -> this.createConstructorFieldAssignment(f));
+
+            clz.setConvertedConstructorEnd("\t\t}\n\t}\n");
         }
 
         return clz;
@@ -43,10 +46,10 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
 
             case "java.util.Date":
             case "java.sql.Timestamp":
-                return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + " ? new Date(m." + jf.getJavaField().getName() + ") : undefined;\n";
+                return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + " ? new Date(m." + jf.getJavaField().getName() + ") : undefined;\n";
 
             default:
-                return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + " || undefined;\n";
+                return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + " || undefined;\n";
         }
     }
 
@@ -63,33 +66,45 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
     @Override
     protected String createConstrJMCFieldMap(JMCFieldMap jf) {
 
-        String converted = "\t\tthis." + jf.getJavaField().getName() + " = ";
-        String convertedKey;
+        String converted = "\t\t\tthis." + jf.getJavaField().getName() + " = ";
+        String convertedKey = "";
         String convertedValue;
+        String fName = jf.getJavaField().getName();
 
         if (! jf.isParametrized()) {
-            converted += "m && m." + jf.getJavaField().getName() + ";\n";
+            converted += "m." + fName + ";\n";
         } else {
             converted += "new Map<" + jf.getConvertedFieldKeyType() + ", " + jf.getConvertedFieldValueType() + ">();\n";
-            converted += "\t\tArray.from(m." + jf.getJavaField().getName() + ".keys()).forEach(k => {\n";
+            converted += "\t\t\tif (m." + fName + ") {\n";
+            converted += "\t\t\t\tfor (let k in m." + fName + ") {\n";
 
             if (! NO_CONSTRUCTOR_DATA_TYPES.contains(jf.getConvertedFieldKeyType())) {
                 convertedKey = "new " + jf.getConvertedFieldKeyType() + "(k)";
             } else {
-                convertedKey = "k";
+                // if number => we need to parse it
+                if (jf.getConvertedFieldKeyType().equalsIgnoreCase("number")) {
+                    convertedKey = "+";
+                }
+
+                convertedKey += "k";
             }
             if (! NO_CONSTRUCTOR_DATA_TYPES.contains(jf.getConvertedFieldValueType())) {
-                convertedValue = "new " + jf.getConvertedFieldValueType() + "(m.get(k))";
+                convertedValue = "new " + jf.getConvertedFieldValueType() + "(m." + fName + "[k])";
             } else {
-                convertedValue = "m.get(k)";
+                convertedValue = "m." + fName + "[k]";
             }
 
-            converted += "\t\t\tm.set(" + convertedKey + ", " + convertedValue + ");\n";
-            converted += "\t\t};\n";
+            converted += "\t\t\t\t\tthis." + fName + ".set(" + convertedKey + ", " + convertedValue + ");\n";
+            converted += "\t\t\t\t}\n";
+            converted += "\t\t\t}\n";
         }
 
         return converted;
     }
+
+//    for (let k in m.paramMap) {
+//        this.paramMap.set(k, m.paramMap[k]);
+//    }
 
 
 
@@ -101,9 +116,9 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
      */
     private String createConstrJMCFieldArrayOrCollection(JMCFieldWithSubtype jf) {
         if (null == jf.getConvertedSubtype() || jf.getConvertedSubtype().isEmpty() || NO_CONSTRUCTOR_DATA_TYPES.contains(jf.getConvertedSubtype())) {
-            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + ";\n";
+            return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + ";\n";
         } else {
-            return "\t\tthis." + jf.getJavaField().getName() + " = m && m." + jf.getJavaField().getName() + " ? m." + jf.getJavaField().getName() + ".map(s => new " + jf.getConvertedSubtype() + "(s)) : [];\n";
+            return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + " ? m." + jf.getJavaField().getName() + ".map(s => new " + jf.getConvertedSubtype() + "(s)) : [];\n";
         }
     }
 }

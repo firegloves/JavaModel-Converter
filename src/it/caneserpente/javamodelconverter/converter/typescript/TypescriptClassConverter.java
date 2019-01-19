@@ -44,9 +44,10 @@ public class TypescriptClassConverter extends AClassConverter {
         clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedFieldStm()));
 
         // constructor
-        sb.append("\n\n" + clz.getConvertedConstructorInit());
+        sb.append("\n\n" + clz.getConvertedConstructorStart());
         clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedContructorFieldStm()));
-        sb.append("\t}\n\n");
+//        sb.append("\t}\n\n");
+        sb.append(clz.getConvertedConstructorEnd());
 
         // close class block
         sb.append("}");

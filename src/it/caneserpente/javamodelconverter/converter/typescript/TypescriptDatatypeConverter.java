@@ -10,7 +10,7 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
     public String convertDataTypeName(@Nullable String typeName) {
 
         if (null == typeName) {
-            return "";
+            return "any";
         }
 
         switch (typeName) {
@@ -33,7 +33,7 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
                 return "Date";
 
             default:
-                return null;
+                return "any";
         }
     }
 

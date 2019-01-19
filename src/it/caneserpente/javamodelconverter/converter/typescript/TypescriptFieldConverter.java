@@ -49,11 +49,9 @@ public class TypescriptFieldConverter extends AFieldConverter {
 
         String converted = "Map";
 
-        if (jf.isParametrized()) {
-            jf.setConvertedFieldKeyType(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeKeyName()));
-            jf.setConvertedFieldValueType(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeValueName()));
-            converted += "<" + jf.getConvertedFieldKeyType() + ", " + jf.getConvertedFieldValueType()  + ">";
-        }
+        jf.setConvertedFieldKeyType(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeKeyName()));
+        jf.setConvertedFieldValueType(this.datatypeConverter.convertDataTypeName(jf.getJavaSubtypeValueName()));
+        converted += "<" + jf.getConvertedFieldKeyType() + ", " + jf.getConvertedFieldValueType() + ">";
 
         jf.setConvertedFieldType(converted);
 

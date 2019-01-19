@@ -6,8 +6,9 @@ public class JMCClass {
 
     private Class clazz;
     private String convertedClassName;
-    private String convertedConstructorInit;
+    private String convertedConstructorStart;
     private List<JMCField> fieldList;
+    private String convertedConstructorEnd;
 
     public JMCClass(Class clazz) {
         this.clazz = clazz;
@@ -29,12 +30,12 @@ public class JMCClass {
         this.clazz = clazz;
     }
 
-    public String getConvertedConstructorInit() {
-        return convertedConstructorInit;
+    public String getConvertedConstructorStart() {
+        return convertedConstructorStart;
     }
 
-    public void setConvertedConstructorInit(String convertedConstructorInit) {
-        this.convertedConstructorInit = convertedConstructorInit;
+    public void setConvertedConstructorStart(String convertedConstructorStart) {
+        this.convertedConstructorStart = convertedConstructorStart;
     }
 
     public List<JMCField> getFieldList() {
@@ -43,5 +44,13 @@ public class JMCClass {
 
     public void setFieldList(List<JMCField> fieldList) {
         this.fieldList = fieldList;
+    }
+
+    public String getConvertedConstructorEnd() {
+        return convertedConstructorEnd;
+    }
+
+    public void setConvertedConstructorEnd(String convertedConstructorEnd) {
+        this.convertedConstructorEnd = convertedConstructorEnd;
     }
 }
