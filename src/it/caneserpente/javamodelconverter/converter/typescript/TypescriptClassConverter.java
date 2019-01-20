@@ -1,5 +1,6 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
@@ -7,6 +8,8 @@ import it.caneserpente.javamodelconverter.model.JMCClass;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TypescriptClassConverter extends AClassConverter {
 
@@ -38,11 +41,7 @@ public class TypescriptClassConverter extends AClassConverter {
         StringBuilder sb = new StringBuilder();
 
         // import
-        clz.getFieldList().stream().forEach(f -> {
-            if (null != f.getImportDataTypeStatement()) {
-                sb.append(f.getImportDataTypeStatement());
-            }
-        });
+        this.writeImports(clz, sb);
 
         // open class block
         sb.append("export class " + clz.getConvertedClassName() + " {").append("\n\n");
@@ -67,6 +66,4 @@ public class TypescriptClassConverter extends AClassConverter {
         }
 
     }
-
-
 }

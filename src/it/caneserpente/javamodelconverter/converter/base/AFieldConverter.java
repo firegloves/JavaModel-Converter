@@ -12,9 +12,14 @@ import java.util.function.Function;
 
 public abstract class AFieldConverter {
 
+    protected ADatatypeConverter datatypeConverter;
     protected Map<Class, Function> strategyMap;
 
-    public AFieldConverter() {
+
+    public AFieldConverter(ADatatypeConverter datatypeConverter) {
+
+        this.datatypeConverter = datatypeConverter;
+
         this.strategyMap = new HashMap<>();
         this.strategyMap.put(JMCFieldBasic.class, (Function<JMCFieldBasic, JMCField>) jf -> this.convertJMCFieldBasic(jf));
         this.strategyMap.put(JMCFieldArray.class, (Function<JMCFieldArray, JMCField>) jf -> this.convertJMCFieldArray(jf));
@@ -110,4 +115,30 @@ public abstract class AFieldConverter {
      */
     protected abstract JMCField convertJMCFieldCustomType(JMCFieldCustomType jf);
 
+    /**
+     * manage a possible import statement and set it into received JMCField importDataTypeStatement var
+     * if typeName belongs to the list of current transpiling data types add the corresponding import statement
+     *
+     * @param jf
+     * @param typeName
+     * @param convertedFieldType
+     */
+    protected void manageImportStatement(JMCField jf, String typeName, String convertedFieldType) {
+
+        // NOTE: we should check if typeName is the same of the owner class and eventually avoid to set important
+        // ex. a Foo class containing a List<Foo> fooList variable. In this case is an error to import Foo into itself
+        // to avoid to pass owner class variable into the whole process of fields conversion this check is demanded to the AClassConverter.writeGeneratedClass method
+
+        if (this.datatypeConverter.isTranspilingDataType(typeName)) {
+            this.setImportDataType(jf, convertedFieldType);
+        }
+    }
+
+    /**
+     * set the import data type and the corresponding statement transcoded into desired language into received JMCField importDataTypeStatement var
+     *
+     * @param jf
+     * @param convertedFieldType
+     */
+    protected abstract void setImportDataType(JMCField jf, String convertedFieldType);
 }

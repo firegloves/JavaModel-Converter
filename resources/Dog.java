@@ -9,6 +9,7 @@ public class Dog {
     private Kennel kennel;
     private List<Dog> puppyList;
     private Collar collar;
+    private Owner[] owners;
 
     public int getId() {
         return id;
@@ -49,4 +50,6 @@ public class Dog {
     public void setCollar(Collar collar) {
         this.collar = collar;
     }
+
+
 }

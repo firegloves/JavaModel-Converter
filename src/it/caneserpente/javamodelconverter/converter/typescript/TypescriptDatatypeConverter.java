@@ -15,10 +15,17 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
     @Override
     public String convertDataTypeName(@Nullable String typeName) {
 
+        // if null returns any
         if (null == typeName) {
             return "any";
         }
 
+        // current transpiling data type
+        if (this.transpilingDataTypes.contains(typeName)) {
+            return this.getTranspilingDataTypeSimpleName(typeName);
+        }
+
+        // managed java data types
         switch (typeName) {
 
             case "int":

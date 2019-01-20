@@ -2,6 +2,7 @@
 
 package it.caneserpente.javamodelconverter.converter.base;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.model.JMCClass;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AClassConverter {
@@ -138,4 +140,28 @@ public abstract class AClassConverter {
      * @param clz the JMCClass of which generate code
      */
     protected abstract void writeGeneratedClass(@Nullable JMCClass clz);
+
+    /**
+     * add JMCClass imports to the StringBuilder
+     * @param clz
+     * @param sb
+     */
+    protected void writeImports(@NotNull JMCClass clz, @NotNull StringBuilder sb) {
+
+        // NOTE: look at AField.Converter.manageImportStatement method'note
+
+        List<String> imports = new ArrayList<>();
+
+        clz.getFieldList().stream().forEach(f -> {
+
+            String importStmt = f.getImportDataTypeStatement();
+
+            if (null != importStmt && ! importStmt.isEmpty() && ! imports.contains(importStmt) && ! clz.getConvertedClassName().equalsIgnoreCase(f.getImportDataType())) {
+                imports.add(importStmt);
+                sb.append(importStmt);
+            }
+        });
+
+        sb.append("\n");
+    }
 }

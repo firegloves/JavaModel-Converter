@@ -13,6 +13,7 @@ public class JMCField {
     private String convertedContructorFieldStm;
 
     // IMPORT
+    private String importDataType;
     private String importDataTypeStatement;
 
     public JMCField(Field javaField) {
@@ -62,6 +63,18 @@ public class JMCField {
 
     public void setImportDataTypeStatement(String importDataTypeStatement) {
         this.importDataTypeStatement = importDataTypeStatement;
+    }
+
+    public void setJavaTypeName(String javaTypeName) {
+        this.javaTypeName = javaTypeName;
+    }
+
+    public String getImportDataType() {
+        return importDataType;
+    }
+
+    public void setImportDataType(String importDataType) {
+        this.importDataType = importDataType;
     }
 
     @Override
