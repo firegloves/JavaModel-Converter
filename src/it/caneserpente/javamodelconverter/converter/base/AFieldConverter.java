@@ -20,6 +20,7 @@ public abstract class AFieldConverter {
         this.strategyMap.put(JMCFieldArray.class, (Function<JMCFieldArray, JMCField>) jf -> this.convertJMCFieldArray(jf));
         this.strategyMap.put(JMCFieldCollection.class, (Function<JMCFieldCollection, JMCField>) jf -> this.convertJMCFieldCollection(jf));
         this.strategyMap.put(JMCFieldMap.class, (Function<JMCFieldMap, JMCField>) jf -> this.convertJMCFieldMap(jf));
+        this.strategyMap.put(JMCFieldCustomType.class, (Function<JMCFieldCustomType, JMCField>) jf -> this.convertJMCFieldCustomType(jf));
     }
 
     /**
@@ -37,7 +38,7 @@ public abstract class AFieldConverter {
         return fieldList;
     }
 
-    // TODO sistemare documentazione metodi da estendere
+    // TODO adjust doc!!!!
 
 
     /**
@@ -101,5 +102,12 @@ public abstract class AFieldConverter {
      * @return JMCField converted
      */
     protected abstract JMCField convertJMCFieldMap(JMCFieldMap jf);
+
+    /**
+     * converts JMCFieldCustomType
+     * @param jf the JMCFieldCustomType to convert
+     * @return JMCField converted
+     */
+    protected abstract JMCField convertJMCFieldCustomType(JMCFieldCustomType jf);
 
 }

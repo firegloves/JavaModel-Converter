@@ -24,6 +24,7 @@ public abstract class AConstructorConverter {
         this.strategyMap.put(JMCFieldArray.class, (Function<JMCFieldArray, String>) jf -> this.createConstrJMCFieldArray(jf));
         this.strategyMap.put(JMCFieldCollection.class, (Function<JMCFieldCollection, String>) jf -> this.createConstrJMCFieldCollection(jf));
         this.strategyMap.put(JMCFieldMap.class, (Function<JMCFieldMap, String>) jf -> this.createConstrJMCFieldMap(jf));
+        this.strategyMap.put(JMCFieldCustomType.class, (Function<JMCFieldCustomType, String>) jf -> this.createConstrJMCFieldCustomType(jf));
     }
 
 
@@ -87,4 +88,13 @@ public abstract class AConstructorConverter {
      * @return JMCField converted
      */
     protected abstract String createConstrJMCFieldMap(JMCFieldMap jf);
+
+
+    /**
+     * converts JMCFieldCustomType
+     *
+     * @param jf the JMCFieldCustomType to convert
+     * @return JMCField converted
+     */
+    protected abstract String createConstrJMCFieldCustomType(JMCFieldCustomType jf);
 }

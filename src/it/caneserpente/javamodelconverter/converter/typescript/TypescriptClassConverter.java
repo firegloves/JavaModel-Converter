@@ -37,6 +37,13 @@ public class TypescriptClassConverter extends AClassConverter {
 
         StringBuilder sb = new StringBuilder();
 
+        // import
+        clz.getFieldList().stream().forEach(f -> {
+            if (null != f.getImportDataTypeStatement()) {
+                sb.append(f.getImportDataTypeStatement());
+            }
+        });
+
         // open class block
         sb.append("export class " + clz.getConvertedClassName() + " {").append("\n\n");
 

@@ -70,8 +70,13 @@ public class JavaFieldReader {
             return new JMCFieldMap(f);
         }
 
+        // custom
+        if (this.datatypeConverter.isTranspilingDataType(f.getGenericType().getTypeName())) {
+            return new JMCFieldCustomType(f);
+        }
+
         // generic supported type
-        if (null != datatypeConverter.convertDataTypeName(f.getGenericType().getTypeName())) {
+        if (null != this.datatypeConverter.convertDataTypeName(f.getGenericType().getTypeName())) {
             return new JMCFieldBasic(f);
         }
 

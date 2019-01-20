@@ -57,4 +57,11 @@ public class TypescriptFieldConverter extends AFieldConverter {
 
         return jf;
     }
+
+    @Override
+    protected JMCField convertJMCFieldCustomType(JMCFieldCustomType jf) {
+        jf.setConvertedFieldType(jf.getJavaTypeName().substring(jf.getJavaTypeName().lastIndexOf('.') + 1));
+        jf.setImportDataTypeStatement("import { " + jf.getConvertedFieldType() + " } from \"./" + jf.getConvertedFieldType() + "\";\n");
+        return jf;
+    }
 }

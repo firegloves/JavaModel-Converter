@@ -12,6 +12,9 @@ public class JMCField {
     private String convertedFieldStm;
     private String convertedContructorFieldStm;
 
+    // IMPORT
+    private String importDataTypeStatement;
+
     public JMCField(Field javaField) {
         this.javaField = javaField;
         this.javaTypeName = this.javaField.getGenericType().getTypeName();
@@ -51,6 +54,14 @@ public class JMCField {
 
     public void setConvertedContructorFieldStm(String convertedContructorFieldStm) {
         this.convertedContructorFieldStm = convertedContructorFieldStm;
+    }
+
+    public String getImportDataTypeStatement() {
+        return importDataTypeStatement;
+    }
+
+    public void setImportDataTypeStatement(String importDataTypeStatement) {
+        this.importDataTypeStatement = importDataTypeStatement;
     }
 
     @Override

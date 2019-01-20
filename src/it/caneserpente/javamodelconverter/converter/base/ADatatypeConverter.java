@@ -2,7 +2,21 @@ package it.caneserpente.javamodelconverter.converter.base;
 
 import com.sun.istack.internal.Nullable;
 
+import java.util.List;
+
 public abstract class ADatatypeConverter {
+
+
+    /**
+     * list of data types in transpiling
+     */
+    private List<String> transpilingDataTypes;
+
+
+    public ADatatypeConverter(List<String> transpilingDataTypes) {
+        this.transpilingDataTypes = transpilingDataTypes;
+    }
+
 
     /**
      * converts field data type into desired language and returns it
@@ -12,4 +26,14 @@ public abstract class ADatatypeConverter {
      */
     public abstract String convertDataTypeName(@Nullable String typeName);
 
+
+    /**
+     * check is received type belongs to the current transpiling class list
+     *
+     * @param typeName the Field typename to convert to desired language
+     * @return true if typeName belongs to the current transpiling class list, false otherwise
+     */
+    public boolean isTranspilingDataType(String typeName) {
+        return null != this.transpilingDataTypes && this.transpilingDataTypes.contains(typeName);
+    }
 }

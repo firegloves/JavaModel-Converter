@@ -102,9 +102,11 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
         return converted;
     }
 
-//    for (let k in m.paramMap) {
-//        this.paramMap.set(k, m.paramMap[k]);
-//    }
+    @Override
+    protected String createConstrJMCFieldCustomType(JMCFieldCustomType jf) {
+        return "\t\t\tthis." + jf.getJavaField().getName() + " = new " + jf.getConvertedFieldType() + "(m." + jf.getJavaField().getName() + ");\n";
+    }
+
 
 
 

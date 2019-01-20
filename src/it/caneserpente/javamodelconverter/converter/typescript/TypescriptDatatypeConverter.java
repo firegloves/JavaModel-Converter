@@ -3,8 +3,14 @@ package it.caneserpente.javamodelconverter.converter.typescript;
 import com.sun.istack.internal.Nullable;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 
+import java.util.List;
+
 public class TypescriptDatatypeConverter extends ADatatypeConverter {
 
+
+    public TypescriptDatatypeConverter(List<String> transpilingDataTypes) {
+        super(transpilingDataTypes);
+    }
 
     @Override
     public String convertDataTypeName(@Nullable String typeName) {
@@ -31,6 +37,10 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
             case "java.sql.Date":
             case "java.sql.Timestamp":
                 return "Date";
+
+            case "boolean":
+            case "java.lang.Boolean":
+                return "boolean";
 
             default:
                 return "any";
