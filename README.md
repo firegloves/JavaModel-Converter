@@ -25,14 +25,14 @@ At the end of the execution you will find
 
 At this moment only Java to Typescript transpiling is supported.
 
-*If you want to develope other language transpiling, feel free to contribute*
+*If you want to develop other language transpiling processes, feel free to contribute*
 
 
 **Typescript**
 
 Transpiling process supports code generation of classes with class members and constructor.
 
-Interface code generation is not supported.
+Interface code generation is not still supported.
 
 Supported Java data types:
 
@@ -60,6 +60,12 @@ transpiled to *Typescript string*
 
 transpiled to *Typescript Date*
 
+----------------------
+
+- boolean
+- java.lang.Boolean
+
+transpiled to *Typescript boolean*
 
 ----------------------
 
@@ -69,3 +75,6 @@ transpiled to *Typescript Date*
 
 transpiled to *Typescript Array*
 
+---------------------
+
+Custom data types included into current transpiling process are now supported
