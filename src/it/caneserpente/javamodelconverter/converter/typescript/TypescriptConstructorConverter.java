@@ -49,7 +49,7 @@ public class TypescriptConstructorConverter extends AConstructorConverter {
                 return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + " ? new Date(m." + jf.getJavaField().getName() + ") : undefined;\n";
 
             default:
-                return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + "\n";
+                return "\t\t\tthis." + jf.getJavaField().getName() + " = m." + jf.getJavaField().getName() + ";\n";
         }
     }
 
