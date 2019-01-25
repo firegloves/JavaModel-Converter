@@ -16,16 +16,20 @@ import java.util.List;
 
 public abstract class AClassConverter {
 
-    protected String inputDirName = "resources/compiled";
-    protected String outputDirName = "resources/generated";
+    protected String inputDirName = "transpiling/compiled";
+    protected String outputDirName = "transpiling/generated";
 
     protected File inputDir = null;
     protected File outputDir = null;
+
+    protected ADatatypeConverter datatypeConverter;
 
     protected AConstructorConverter constructorConverter;
     protected AFieldConverter fieldConverter;
 
     private JavaFieldReader fieldReader;
+
+    public AClassConverter() {}
 
     public AClassConverter(String inputDir, String outputDir, AConstructorConverter constructorConverter, AFieldConverter fieldConverter, ADatatypeConverter datatypeConverter) {
 
@@ -43,16 +47,84 @@ public abstract class AClassConverter {
             this.outputDirName = outputDir;
         }
         this.outputDir = new File(this.outputDirName);
+        if (!this.outputDir.exists()) {
+            this.outputDir.mkdirs();
+        }
         if (!this.outputDir.exists() || !this.outputDir.isDirectory()) {
             throw new RuntimeException("Input Dir " + this.outputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
         }
 
         // field reader
-        this.fieldReader = new JavaFieldReader(datatypeConverter);
+//        this.fieldReader = new JavaFieldReader(datatypeConverter);
 
         // sub converters
         this.constructorConverter = constructorConverter;
         this.fieldConverter = fieldConverter;
+    }
+
+    public String getInputDirName() {
+        return inputDirName;
+    }
+
+    public void setInputDirName(String inputDirName) {
+        this.inputDirName = inputDirName;
+    }
+
+    public String getOutputDirName() {
+        return outputDirName;
+    }
+
+    public void setOutputDirName(String outputDirName) {
+        this.outputDirName = outputDirName;
+    }
+
+    public File getInputDir() {
+        return inputDir;
+    }
+
+    public void setInputDir(File inputDir) {
+        this.inputDir = inputDir;
+    }
+
+    public File getOutputDir() {
+        return outputDir;
+    }
+
+    public void setOutputDir(File outputDir) {
+        this.outputDir = outputDir;
+    }
+
+    public AConstructorConverter getConstructorConverter() {
+        return constructorConverter;
+    }
+
+    public void setConstructorConverter(AConstructorConverter constructorConverter) {
+        this.constructorConverter = constructorConverter;
+    }
+
+    public AFieldConverter getFieldConverter() {
+        return fieldConverter;
+    }
+
+    public void setFieldConverter(AFieldConverter fieldConverter) {
+        this.fieldConverter = fieldConverter;
+    }
+
+    public JavaFieldReader getFieldReader() {
+        return fieldReader;
+    }
+
+    public void setFieldReader(JavaFieldReader fieldReader) {
+        this.fieldReader = fieldReader;
+    }
+
+    public ADatatypeConverter getDatatypeConverter() {
+        return datatypeConverter;
+    }
+
+    public void setDatatypeConverter(ADatatypeConverter datatypeConverter) {
+        this.datatypeConverter = datatypeConverter;
+        this.setFieldReader(new JavaFieldReader(datatypeConverter));
     }
 
     /**

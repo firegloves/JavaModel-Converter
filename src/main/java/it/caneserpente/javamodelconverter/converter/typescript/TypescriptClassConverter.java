@@ -13,7 +13,9 @@ import java.util.List;
 
 public class TypescriptClassConverter extends AClassConverter {
 
-    private ADatatypeConverter datatypeConverter;
+    public TypescriptClassConverter() {
+        super();
+    }
 
     /**
      * constructor
@@ -23,7 +25,7 @@ public class TypescriptClassConverter extends AClassConverter {
      */
     public TypescriptClassConverter(String inputDir, String outputDir, ADatatypeConverter datatypeConverter) {
         super(inputDir, outputDir, new TypescriptConstructorConverter(datatypeConverter), new TypescriptFieldConverter(datatypeConverter), datatypeConverter);
-        this.datatypeConverter = datatypeConverter;
+        this.setDatatypeConverter(datatypeConverter);
     }
 
     @Override

@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 public class ClassListScanner {
 
-    private String inputDirName = "resources/";
-    private String compiledDirName = "resources/compiled";
+    private String inputDirName = "transpiling/";
+    private String compiledDirName = "transpiling/compiled";
 
     private String javacArgsFilePath;
 
@@ -45,6 +45,9 @@ public class ClassListScanner {
             this.compiledDirName = compiledDirName;
         }
         this.compiledDir = new File(this.compiledDirName);
+        if (!this.compiledDir.exists()) {
+            this.compiledDir.mkdirs();
+        }
         if (!this.compiledDir.exists() || !this.compiledDir.isDirectory()) {
             throw new RuntimeException("Compiled Dir " + this.compiledDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
         }
