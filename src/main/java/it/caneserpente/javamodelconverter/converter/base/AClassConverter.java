@@ -2,8 +2,8 @@
 
 package it.caneserpente.javamodelconverter.converter.base;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.model.JMCClass;
 
@@ -31,31 +31,16 @@ public abstract class AClassConverter {
 
     public AClassConverter() {}
 
-    public AClassConverter(String inputDir, String outputDir, AConstructorConverter constructorConverter, AFieldConverter fieldConverter, ADatatypeConverter datatypeConverter) {
+    public AClassConverter(String inputDirName, String outputDirName, AConstructorConverter constructorConverter, AFieldConverter fieldConverter, ADatatypeConverter datatypeConverter) {
 
         // input dir
-        if (null != inputDir && !inputDir.isEmpty()) {
-            this.inputDirName = inputDir;
-        }
-        this.inputDir = new File(this.inputDirName);
-        if (!this.inputDir.exists() || !this.inputDir.isDirectory()) {
-            throw new RuntimeException("Input Dir " + this.inputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
-        }
+        this.setInputDirName(inputDirName);
 
         // output dir
-        if (null != outputDir && !outputDir.isEmpty()) {
-            this.outputDirName = outputDir;
-        }
-        this.outputDir = new File(this.outputDirName);
-        if (!this.outputDir.exists()) {
-            this.outputDir.mkdirs();
-        }
-        if (!this.outputDir.exists() || !this.outputDir.isDirectory()) {
-            throw new RuntimeException("Input Dir " + this.outputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
-        }
+        this.setOutputDirName(outputDirName);
 
         // field reader
-//        this.fieldReader = new JavaFieldReader(datatypeConverter);
+        this.fieldReader = new JavaFieldReader(datatypeConverter);
 
         // sub converters
         this.constructorConverter = constructorConverter;
@@ -68,6 +53,7 @@ public abstract class AClassConverter {
 
     public void setInputDirName(String inputDirName) {
         this.inputDirName = inputDirName;
+        this.setInputDir(new File(this.inputDirName));
     }
 
     public String getOutputDirName() {
@@ -76,22 +62,32 @@ public abstract class AClassConverter {
 
     public void setOutputDirName(String outputDirName) {
         this.outputDirName = outputDirName;
+        this.setOutputDir(new File(this.outputDirName));
     }
 
     public File getInputDir() {
         return inputDir;
     }
 
-    public void setInputDir(File inputDir) {
+    private void setInputDir(File inputDir) {
         this.inputDir = inputDir;
+        if (! this.inputDir.exists() || ! this.inputDir.isDirectory()) {
+            throw new RuntimeException("Input Dir " + this.inputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
+        }
     }
 
     public File getOutputDir() {
         return outputDir;
     }
 
-    public void setOutputDir(File outputDir) {
+    private void setOutputDir(File outputDir) {
         this.outputDir = outputDir;
+        if (! this.outputDir.exists()) {
+            this.outputDir.mkdirs();
+        }
+        if (! this.outputDir.exists() || !this.outputDir.isDirectory()) {
+            throw new RuntimeException("Output Dir " + this.outputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
+        }
     }
 
     public AConstructorConverter getConstructorConverter() {

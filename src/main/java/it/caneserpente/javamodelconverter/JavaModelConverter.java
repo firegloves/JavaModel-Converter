@@ -16,7 +16,7 @@ public class JavaModelConverter {
     public static void main(String[] args) {
 
         // scans directory for .java files and build it
-        List<String> classList = new ClassListScanner(null, null).scanForClasses();
+        List<String> classList = new ClassListScanner().scanForClasses();
         classList.stream().forEach(c -> System.out.println(c));
 
 //        ClassConverterBuilder builder = new ClassConverterBuilder()

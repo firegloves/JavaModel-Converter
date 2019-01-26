@@ -1,9 +1,7 @@
 # JavaModel-Converter
 An easy to use automation to generate transpiled code starting from Java Model objects
 
-Unlike other transpiling projects, this one is designed with the goal to be easy to use and to extend. For this reason no compiling tool is used in this application.
-
-Only Java 8+ is required. All dependencies are bundled into the project.
+Java 8+ is required.
 
 ### Launch options
 

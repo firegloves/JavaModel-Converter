@@ -5,7 +5,7 @@
 
 package it.caneserpente.javamodelconverter;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -29,11 +29,13 @@ public class ClassListScanner {
     private List<String> compileFileList;
 
 
-    public ClassListScanner(String inputDirName, String compiledDirName) {
+    public ClassListScanner() {
+
+        ApplicationConfig config = ApplicationConfig.getInstance();
 
         // input dir
-        if (null != inputDirName && !inputDirName.isEmpty()) {
-            this.inputDirName = inputDirName;
+        if (null != config.getTargetJavaClassesDir() && !config.getTargetJavaClassesDir().isEmpty()) {
+            this.inputDirName = config.getTargetJavaClassesDir();
         }
         this.inputDir = new File(this.inputDirName);
         if (!this.inputDir.exists() || !this.inputDir.isDirectory()) {
@@ -41,8 +43,8 @@ public class ClassListScanner {
         }
 
         // compiled dir
-        if (null != compiledDirName && !compiledDirName.isEmpty()) {
-            this.compiledDirName = compiledDirName;
+        if (null != config.getTargetCompiledDir() && !config.getTargetCompiledDir().isEmpty()) {
+            this.compiledDirName = config.getTargetCompiledDir();
         }
         this.compiledDir = new File(this.compiledDirName);
         if (!this.compiledDir.exists()) {

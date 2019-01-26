@@ -2,7 +2,7 @@
 
 package it.caneserpente.javamodelconverter.converter.base;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import it.caneserpente.javamodelconverter.model.*;
 
 import java.util.HashMap;

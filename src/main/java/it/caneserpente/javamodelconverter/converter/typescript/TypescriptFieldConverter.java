@@ -1,6 +1,6 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.converter.base.AFieldConverter;
 import it.caneserpente.javamodelconverter.model.*;

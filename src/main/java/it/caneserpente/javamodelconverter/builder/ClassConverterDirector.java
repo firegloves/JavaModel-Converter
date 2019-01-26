@@ -2,6 +2,7 @@ package it.caneserpente.javamodelconverter.builder;
 
 import it.caneserpente.javamodelconverter.ESupporterLanguages;
 import it.caneserpente.javamodelconverter.ApplicationConfig;
+import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.converter.typescript.TypescriptClassConverter;
@@ -11,6 +12,7 @@ import it.caneserpente.javamodelconverter.converter.typescript.TypescriptFieldCo
 import it.caneserpente.javamodelconverter.exception.JMCException;
 import org.jeasy.props.api.PropertiesInjector;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +33,18 @@ public class ClassConverterDirector {
     public ClassConverterDirector(List<String> transpilingClassList) {
 
         // lead application properties
-        this.config = new ApplicationConfig();
-        aNewPropertiesInjector().injectProperties(config);
+        this.config = ApplicationConfig.getInstance();
 
+        // transpiling language
         this.transpilingLang = ESupporterLanguages.valueOf(config.getTargetLanguage());
+        if (!Arrays.asList(ESupporterLanguages.values()).contains(this.transpilingLang)) {
+            throw new JMCException("Transpiling language unsupported or not recognized");
+        }
+
+        // transpiling class list
         this.transpilingClassList = transpilingClassList;
 
+        // configure functions map
         this.map = new HashMap<>();
         this.map.put(ESupporterLanguages.TYPESCRIPT, () -> this.constructTypescript(this.transpilingClassList));
     }
@@ -47,11 +55,7 @@ public class ClassConverterDirector {
      * @return the subtype AClassConverter correctly instantiated and composed
      */
     public AClassConverter construct() {
-        try {
-            return this.map.get(this.transpilingLang).get();
-        } catch (Exception e) {
-            throw new JMCException("Transpiling language unsupported or not recognized");
-        }
+        return this.map.get(this.transpilingLang).get();
     }
 
 
@@ -65,8 +69,9 @@ public class ClassConverterDirector {
         ADatatypeConverter datatypeConverter = new TypescriptDatatypeConverter(transpilingClassList);
 
         return GenericBuilder.of(TypescriptClassConverter::new)
-                .with(AClassConverter::setInputDirName, null)
-                .with(AClassConverter::setOutputDir, null)
+                .with(AClassConverter::setInputDirName, this.config.getTargetCompiledDir())
+                .with(AClassConverter::setOutputDirName, this.config.getTargetOutputDir())
+                .with(AClassConverter::setFieldReader, new JavaFieldReader(datatypeConverter))
                 .with(AClassConverter::setConstructorConverter, new TypescriptConstructorConverter(datatypeConverter))
                 .with(AClassConverter::setFieldConverter, new TypescriptFieldConverter(datatypeConverter))
                 .build();
