@@ -9,15 +9,14 @@ Put java classes to transpile into `[project_root]/resources/`, then launch the 
 
 To launch you can choose from these options:
 
-- open the project in your IDE, add a Run Configuration and launch it, optionally passing parameters
+- open the project in your IDE, add a Run Configuration and launch it
 - launch jar included into dist folder, optionally passing parameters
 
-At the end of the execution you will find
+You can make some configurations into application.properties file. It is already setted with a working configuration.
+By default you need to put your to transpile java classes into `[project_root]/transpiling` folder.
 
-- compiled java classes into `[project_root]/resources/compiled`
-- transpiled classes into `[project_root]/resources/generated`
 
-**WHEN YOU COPY PASTE YOUR JAVA CLASSES TO TRANSPILE INTO SOME IDE CHECK IF IT HAVE REMOVED JAVA PACKAGE. WITHOUT PACKAGE JavaModel-Converter CAN'T WORK (for now ;) )**
+**WHEN YOU COPY PASTE YOUR JAVA CLASSES TO TRANSPILE INTO SOME IDE CHECK IF IT HAS REMOVED JAVA PACKAGE. WITHOUT PACKAGE JavaModel-Converter CAN'T WORK (for now ;) )**
 
 ### Supported languages
 
