@@ -41,7 +41,7 @@ You can add a prefix and / or a suffix to append to generated filenames.
 You can configure them into `application.properties`'s `filename.prefix` and `application.properties`'s `filename.suffix`
 Actually Angular coding style and suffix are conflicting, don't mix them please
 
-Supported Java data types:
+*Supported Java data types*
 
 - int
 - java.lang.Integer
