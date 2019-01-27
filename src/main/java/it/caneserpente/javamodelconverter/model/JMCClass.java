@@ -5,6 +5,7 @@ import java.util.List;
 public class JMCClass {
 
     private Class clazz;
+    private String fileName;
     private String convertedClassName;
     private String convertedConstructorStart;
     private List<JMCField> fieldList;
@@ -12,6 +13,14 @@ public class JMCClass {
 
     public JMCClass(Class clazz) {
         this.clazz = clazz;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getConvertedClassName() {

@@ -176,6 +176,9 @@ public abstract class AClassConverter {
             // generate class name
             this.convertClassName(clz);
 
+            // genete resulting filename
+            this.convertFileName(clz);
+
             // generate constructor
             this.constructorConverter.createConstructor(clz);
 
@@ -184,6 +187,14 @@ public abstract class AClassConverter {
         }
     }
 
+
+    /**
+     * converts resulting file name
+     *
+     * @param clz the JMCClass from which get name to convert
+     * @return JMCClass with name converted into desired language
+     */
+    protected abstract JMCClass convertFileName(@Nullable JMCClass clz);
 
     /**
      * converts class name into desired language and set it into received JMCClass
@@ -203,10 +214,16 @@ public abstract class AClassConverter {
     protected abstract void writeGeneratedClass(@Nullable JMCClass clz);
 
     /**
-     * creates and resturns name to assign to transpiled file to save
-     * @return name to assign to transpiled file to save
+     * creates and returns the name to assign to transpiled file to save
      */
-    protected abstract String createClassFileName(JMCClass clz);
+    protected String createClassFileName(JMCClass clz) {
+        return ApplicationConfig.getInstance().getFilenamePrefix() + clz.getFileName() + ApplicationConfig.getInstance().getFilenameSuffix() + this.getTranspilingLangExtension();
+    }
+
+    /**
+     * @return transpiling language filename extension
+     */
+    protected abstract String getTranspilingLangExtension();
 
     /**
      * add JMCClass imports to the StringBuilder
@@ -231,4 +248,6 @@ public abstract class AClassConverter {
 
         sb.append("\n");
     }
+
+
 }

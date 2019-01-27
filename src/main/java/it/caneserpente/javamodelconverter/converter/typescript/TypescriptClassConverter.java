@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 
 public class TypescriptClassConverter extends AClassConverter {
 
-    private final String TS_EXT = ".ts";
 
     /**
      * if true interfaces are generated instead of classes
@@ -40,6 +39,26 @@ public class TypescriptClassConverter extends AClassConverter {
         this.angularCodingStyle = ApplicationConfig.getInstance().isAngularCodingStyle();
     }
 
+    @Override
+    protected JMCClass convertFileName(@Nullable JMCClass clz) {
+        if (null != clz) {
+
+            String fileName;
+
+            if (this.angularCodingStyle) {
+                // split each found uppercase
+                String[] clzNameToken = clz.getConvertedClassName().split("(?=\\p{Lu})");
+                // example: pojo-test.model.ts
+                fileName = String.join("-", clzNameToken).toLowerCase() + ".model";
+            } else {
+                fileName = clz.getConvertedClassName();
+            }
+
+            clz.setFileName(fileName);
+        }
+        return clz;
+    }
+
 
     @Override
     protected JMCClass convertClassName(@Nullable JMCClass clz) {
@@ -49,17 +68,9 @@ public class TypescriptClassConverter extends AClassConverter {
         return clz;
     }
 
-
     @Override
-    protected String createClassFileName(JMCClass clz) {
-        if (this.angularCodingStyle) {
-            // split each found uppercase
-            String[] clzNameToken = clz.getConvertedClassName().split("(?=\\p{Lu})");
-            // example: pojo-test.model.ts
-            return String.join("-", clzNameToken).toLowerCase() + ".model" + TS_EXT;
-        } else {
-            return clz.getConvertedClassName() + TS_EXT;
-        }
+    protected String getTranspilingLangExtension() {
+        return ".ts";
     }
 
 
@@ -96,6 +107,8 @@ public class TypescriptClassConverter extends AClassConverter {
         }
 
     }
+
+
 
 
 }

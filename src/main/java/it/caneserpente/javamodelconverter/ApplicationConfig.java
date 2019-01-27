@@ -21,6 +21,11 @@ public class ApplicationConfig {
     @Property(source = "application.properties", key = "target.outputDir")
     private String targetOutputDir;
 
+    @Property(source = "application.properties", key = "filename.prefix")
+    private String filenamePrefix;
+
+    @Property(source = "application.properties", key = "filename.suffix")
+    private String filenameSuffix;
 
     /******************************************************************************
      *                      TYPESCRIPT SPECIFIC CONFIG
@@ -34,7 +39,15 @@ public class ApplicationConfig {
 
 
     private ApplicationConfig() {
+        // inject props
         aNewPropertiesInjector().injectProperties(this);
+
+        if (null == this.getFilenamePrefix()) {
+            this.setFilenamePrefix("");
+        }
+        if (null == this.getFilenameSuffix()) {
+            this.setFilenameSuffix("");
+        }
     }
 
     public static ApplicationConfig getInstance() {
@@ -95,5 +108,21 @@ public class ApplicationConfig {
 
     public void setAngularCodingStyle(boolean angularCodingStyle) {
         this.angularCodingStyle = angularCodingStyle;
+    }
+
+    public String getFilenamePrefix() {
+        return filenamePrefix;
+    }
+
+    public void setFilenamePrefix(String filenamePrefix) {
+        this.filenamePrefix = filenamePrefix;
+    }
+
+    public String getFilenameSuffix() {
+        return filenameSuffix;
+    }
+
+    public void setFilenameSuffix(String filenameSuffix) {
+        this.filenameSuffix = filenameSuffix;
     }
 }
