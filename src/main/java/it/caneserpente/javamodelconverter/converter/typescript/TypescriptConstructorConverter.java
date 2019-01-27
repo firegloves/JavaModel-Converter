@@ -1,9 +1,9 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
-import org.jetbrains.annotations.Nullable;
 import it.caneserpente.javamodelconverter.converter.base.AConstructorConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.model.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;

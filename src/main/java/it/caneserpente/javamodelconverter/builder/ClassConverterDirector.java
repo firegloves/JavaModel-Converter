@@ -1,7 +1,7 @@
 package it.caneserpente.javamodelconverter.builder;
 
-import it.caneserpente.javamodelconverter.ESupportedLanguages;
 import it.caneserpente.javamodelconverter.ApplicationConfig;
+import it.caneserpente.javamodelconverter.ESupportedLanguages;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
@@ -31,7 +31,7 @@ public class ClassConverterDirector {
 
     public ClassConverterDirector(List<String> transpilingClassList) {
 
-        // lead application properties
+        // load application properties
         this.config = ApplicationConfig.getInstance();
 
         // transpiling language
@@ -52,6 +52,8 @@ public class ClassConverterDirector {
      * configure strategy pattern's map
      */
     private void configureMap() {
+
+        this.map = new HashMap<>();
 
         this.map.put(ESupportedLanguages.TYPESCRIPT, () -> this.constructTypescript());
 

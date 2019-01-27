@@ -2,8 +2,8 @@
 
 package it.caneserpente.javamodelconverter.converter.base;
 
-import org.jetbrains.annotations.Nullable;
 import it.caneserpente.javamodelconverter.model.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

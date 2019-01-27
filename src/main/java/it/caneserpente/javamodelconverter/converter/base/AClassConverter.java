@@ -2,10 +2,11 @@
 
 package it.caneserpente.javamodelconverter.converter.base;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import it.caneserpente.javamodelconverter.ApplicationConfig;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.model.JMCClass;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -29,22 +30,14 @@ public abstract class AClassConverter {
 
     private JavaFieldReader fieldReader;
 
-    public AClassConverter() {}
+    public AClassConverter() {
+        this.loadConfig();
+    }
 
-    public AClassConverter(String inputDirName, String outputDirName, AConstructorConverter constructorConverter, AFieldConverter fieldConverter, ADatatypeConverter datatypeConverter) {
-
-        // input dir
-        this.setInputDirName(inputDirName);
-
-        // output dir
-        this.setOutputDirName(outputDirName);
-
-        // field reader
-        this.fieldReader = new JavaFieldReader(datatypeConverter);
-
-        // sub converters
-        this.constructorConverter = constructorConverter;
-        this.fieldConverter = fieldConverter;
+    /**
+     * load some current transpiling language configuration from application.properties
+     */
+    protected void loadConfig() {
     }
 
     public String getInputDirName() {

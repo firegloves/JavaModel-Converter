@@ -1,9 +1,9 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
-import org.jetbrains.annotations.NotNull;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.converter.base.AFieldConverter;
 import it.caneserpente.javamodelconverter.model.*;
+import org.jetbrains.annotations.NotNull;
 
 public class TypescriptFieldConverter extends AFieldConverter {
 

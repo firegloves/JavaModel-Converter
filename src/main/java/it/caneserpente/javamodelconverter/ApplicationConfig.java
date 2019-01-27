@@ -21,6 +21,15 @@ public class ApplicationConfig {
     @Property(source = "application.properties", key = "target.outputDir")
     private String targetOutputDir;
 
+
+    /******************************************************************************
+     *                      TYPESCRIPT SPECIFIC CONFIG
+     *****************************************************************************/
+
+    @Property(source = "application.properties", key = "typescript.generateInterface")
+    private boolean generateInterface;
+
+
     private ApplicationConfig() {
         aNewPropertiesInjector().injectProperties(this);
     }
@@ -63,5 +72,13 @@ public class ApplicationConfig {
 
     public void setTargetOutputDir(String targetOutputDir) {
         this.targetOutputDir = targetOutputDir;
+    }
+
+    public boolean isGenerateInterface() {
+        return generateInterface;
+    }
+
+    public void setGenerateInterface(boolean generateInterface) {
+        this.generateInterface = generateInterface;
     }
 }

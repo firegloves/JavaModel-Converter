@@ -1,7 +1,7 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
-import org.jetbrains.annotations.Nullable;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

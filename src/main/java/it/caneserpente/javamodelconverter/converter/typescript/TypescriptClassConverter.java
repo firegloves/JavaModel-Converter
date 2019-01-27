@@ -1,32 +1,37 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import it.caneserpente.javamodelconverter.ApplicationConfig;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.model.JMCClass;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TypescriptClassConverter extends AClassConverter {
 
-    public TypescriptClassConverter() {
-        super();
-    }
+    /**
+     * if true interfaces are generated instead of classes
+     */
+    private boolean generateInterfaces;
 
     /**
-     * constructor
-     *
-     * @param inputDir  : directory from where read class to generated. if null resources/compiled directory is choosen
-     * @param outputDir : directory where to write generated files. if null resources/generated directory is choosen
+     * contains type name to generate
      */
-    public TypescriptClassConverter(String inputDir, String outputDir, ADatatypeConverter datatypeConverter) {
-        super(inputDir, outputDir, new TypescriptConstructorConverter(datatypeConverter), new TypescriptFieldConverter(datatypeConverter), datatypeConverter);
-        this.setDatatypeConverter(datatypeConverter);
+    private String typeToGenerate;
+
+    public TypescriptClassConverter() {
+        super();
+        this.loadConfig();
     }
+
+    @Override
+    protected void loadConfig() {
+        this.generateInterfaces = ApplicationConfig.getInstance().isGenerateInterface();
+        this.typeToGenerate = this.generateInterfaces ? "interface" : "class";
+    }
+
 
     @Override
     protected JMCClass convertClassName(@Nullable JMCClass clz) {
@@ -46,16 +51,18 @@ public class TypescriptClassConverter extends AClassConverter {
         this.writeImports(clz, sb);
 
         // open class block
-        sb.append("export class " + clz.getConvertedClassName() + " {").append("\n\n");
+        sb.append("export " + this.typeToGenerate + " " + clz.getConvertedClassName() + " {").append("\n\n");
 
         // fields
         clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedFieldStm()));
 
-        // constructor
-        sb.append("\n\n" + clz.getConvertedConstructorStart());
-        clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedContructorFieldStm()));
-//        sb.append("\t}\n\n");
-        sb.append(clz.getConvertedConstructorEnd());
+        // constructor (only if class generation)
+        if (! this.generateInterfaces) {
+
+            sb.append("\n\n" + clz.getConvertedConstructorStart());
+            clz.getFieldList().stream().forEach(f -> sb.append(f.getConvertedContructorFieldStm()));
+            sb.append(clz.getConvertedConstructorEnd());
+        }
 
         // close class block
         sb.append("}");
