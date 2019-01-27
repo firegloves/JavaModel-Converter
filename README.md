@@ -25,7 +25,7 @@ At this moment only Java to Typescript transpiling is supported.
 
 Transpiling process supports code generation of classes with class members and constructor.
 
-Interface and class code generation is supported. You can configure what generate into `application.properties`'s `typescript.generateInterface`
+Interface and class code generation is supported. You can configure what to generate into `application.properties`'s `typescript.generateInterface`
 Keep in mind how [interfaces work in Typescript](https://www.typescriptlang.org/docs/handbook/interfaces.html).
 I suggest to use almost always classes to take full advantage of type power.
 
