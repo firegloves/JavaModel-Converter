@@ -17,26 +17,15 @@ public class JavaModelConverter {
 
         // scans directory for .java files and build it
         List<String> classList = new ClassListScanner().scanForClasses();
-        classList.stream().forEach(c -> System.out.println(c));
 
-//        ClassConverterBuilder builder = new ClassConverterBuilder()
-//                .with($ -> {
-//                    $.setClassConverter();
-//                })
+        if (DEBUG) {
+            classList.stream().forEach(c -> System.out.println(c));
+        }
 
-        ClassConverterDirector director = new ClassConverterDirector(classList);
-        AClassConverter classConverter = director.construct();
+        // create desired class converter
+        AClassConverter classConverter = new ClassConverterDirector(classList).construct();
 
-        // init TypescriptDatatypeConverter
-//        ADatatypeConverter datatypeConverter = new TypescriptDatatypeConverter(classList);
-
+        // convert classes
         classConverter.convertClassList(classList);
     }
-
-//    /**
-//     * instantiates converters
-//     */
-//    private static void createConverters() {
-//
-//    }
 }
