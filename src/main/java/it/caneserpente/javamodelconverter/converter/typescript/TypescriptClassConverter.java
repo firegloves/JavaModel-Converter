@@ -1,8 +1,7 @@
 package it.caneserpente.javamodelconverter.converter.typescript;
 
-import it.caneserpente.javamodelconverter.ApplicationConfig;
+import it.caneserpente.javamodelconverter.AppConfig;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
-import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.model.JMCClass;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,9 +33,9 @@ public class TypescriptClassConverter extends AClassConverter {
 
     @Override
     protected void loadConfig() {
-        this.generateInterfaces = ApplicationConfig.getInstance().isGenerateInterface();
+        this.generateInterfaces = AppConfig.getInstance().isGenerateInterface();
         this.typeToGenerate = this.generateInterfaces ? "interface" : "class";
-        this.angularCodingStyle = ApplicationConfig.getInstance().isAngularCodingStyle();
+        this.angularCodingStyle = AppConfig.getInstance().isAngularCodingStyle();
     }
 
     @Override

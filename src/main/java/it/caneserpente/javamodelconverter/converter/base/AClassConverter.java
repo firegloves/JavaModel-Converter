@@ -2,7 +2,7 @@
 
 package it.caneserpente.javamodelconverter.converter.base;
 
-import it.caneserpente.javamodelconverter.ApplicationConfig;
+import it.caneserpente.javamodelconverter.AppConfig;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
 import it.caneserpente.javamodelconverter.model.JMCClass;
 import org.jetbrains.annotations.NotNull;
@@ -217,7 +217,7 @@ public abstract class AClassConverter {
      * creates and returns the name to assign to transpiled file to save
      */
     protected String createClassFileName(JMCClass clz) {
-        return ApplicationConfig.getInstance().getFilenamePrefix() + clz.getFileName() + ApplicationConfig.getInstance().getFilenameSuffix() + this.getTranspilingLangExtension();
+        return AppConfig.getInstance().getFilenamePrefix() + clz.getFileName() + AppConfig.getInstance().getFilenameSuffix() + this.getTranspilingLangExtension();
     }
 
     /**

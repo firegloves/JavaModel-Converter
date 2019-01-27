@@ -5,9 +5,9 @@ import org.jeasy.props.annotations.Property;
 
 import static org.jeasy.props.PropertiesInjectorBuilder.aNewPropertiesInjector;
 
-public class ApplicationConfig {
+public class AppConfig {
 
-    private static ApplicationConfig instance;
+    private static AppConfig instance;
 
     @Property(source = "application.properties", key = "target.language")
     private String targetLanguage;
@@ -38,7 +38,7 @@ public class ApplicationConfig {
     private boolean angularCodingStyle;
 
 
-    private ApplicationConfig() {
+    private AppConfig() {
         // inject props
         aNewPropertiesInjector().injectProperties(this);
 
@@ -50,9 +50,9 @@ public class ApplicationConfig {
         }
     }
 
-    public static ApplicationConfig getInstance() {
+    public static AppConfig getInstance() {
         if (null == instance) {
-            instance = new ApplicationConfig();
+            instance = new AppConfig();
         }
         return instance;
     }
@@ -98,8 +98,8 @@ public class ApplicationConfig {
         this.generateInterface = generateInterface;
     }
 
-    public static void setInstance(ApplicationConfig instance) {
-        ApplicationConfig.instance = instance;
+    public static void setInstance(AppConfig instance) {
+        AppConfig.instance = instance;
     }
 
     public boolean isAngularCodingStyle() {
