@@ -203,6 +203,12 @@ public abstract class AClassConverter {
     protected abstract void writeGeneratedClass(@Nullable JMCClass clz);
 
     /**
+     * creates and resturns name to assign to transpiled file to save
+     * @return name to assign to transpiled file to save
+     */
+    protected abstract String createClassFileName(JMCClass clz);
+
+    /**
      * add JMCClass imports to the StringBuilder
      * @param clz
      * @param sb

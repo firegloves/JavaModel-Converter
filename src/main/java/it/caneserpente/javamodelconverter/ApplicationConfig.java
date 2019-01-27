@@ -29,6 +29,9 @@ public class ApplicationConfig {
     @Property(source = "application.properties", key = "typescript.generateInterface")
     private boolean generateInterface;
 
+    @Property(source = "application.properties", key = "typescript.angularCodingStyle")
+    private boolean angularCodingStyle;
+
 
     private ApplicationConfig() {
         aNewPropertiesInjector().injectProperties(this);
@@ -80,5 +83,17 @@ public class ApplicationConfig {
 
     public void setGenerateInterface(boolean generateInterface) {
         this.generateInterface = generateInterface;
+    }
+
+    public static void setInstance(ApplicationConfig instance) {
+        ApplicationConfig.instance = instance;
+    }
+
+    public boolean isAngularCodingStyle() {
+        return angularCodingStyle;
+    }
+
+    public void setAngularCodingStyle(boolean angularCodingStyle) {
+        this.angularCodingStyle = angularCodingStyle;
     }
 }

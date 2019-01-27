@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 
 public class TypescriptClassConverter extends AClassConverter {
 
+    private final String TS_EXT = ".ts";
+
     /**
      * if true interfaces are generated instead of classes
      */
@@ -21,6 +23,11 @@ public class TypescriptClassConverter extends AClassConverter {
      */
     private String typeToGenerate;
 
+    /**
+     * if true follows angular coding style
+     */
+    private boolean angularCodingStyle;
+
     public TypescriptClassConverter() {
         super();
         this.loadConfig();
@@ -30,6 +37,7 @@ public class TypescriptClassConverter extends AClassConverter {
     protected void loadConfig() {
         this.generateInterfaces = ApplicationConfig.getInstance().isGenerateInterface();
         this.typeToGenerate = this.generateInterfaces ? "interface" : "class";
+        this.angularCodingStyle = ApplicationConfig.getInstance().isAngularCodingStyle();
     }
 
 
@@ -39,6 +47,19 @@ public class TypescriptClassConverter extends AClassConverter {
             clz.setConvertedClassName(clz.getClazz().getSimpleName());
         }
         return clz;
+    }
+
+
+    @Override
+    protected String createClassFileName(JMCClass clz) {
+        if (this.angularCodingStyle) {
+            // split each found uppercase
+            String[] clzNameToken = clz.getConvertedClassName().split("(?=\\p{Lu})");
+            // example: pojo-test.model.ts
+            return String.join("-", clzNameToken).toLowerCase() + ".model" + TS_EXT;
+        } else {
+            return clz.getConvertedClassName() + TS_EXT;
+        }
     }
 
 
@@ -67,7 +88,7 @@ public class TypescriptClassConverter extends AClassConverter {
         // close class block
         sb.append("}");
 
-        try (PrintWriter writer = new PrintWriter(new File(super.outputDir.getAbsolutePath() + System.getProperty("file.separator") + clz.getConvertedClassName() + ".ts"))) {
+        try (PrintWriter writer = new PrintWriter(new File(super.outputDir.getAbsolutePath() + System.getProperty("file.separator") + this.createClassFileName(clz)))) {
             writer.println(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,4 +96,6 @@ public class TypescriptClassConverter extends AClassConverter {
         }
 
     }
+
+
 }
