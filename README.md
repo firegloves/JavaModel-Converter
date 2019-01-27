@@ -30,11 +30,13 @@ Keep in mind how [interfaces work in Typescript](https://www.typescriptlang.org/
 I suggest to use almost always classes to take full advantage of type power.
 
 *Angular coding style is now supported*
+
 You can set it by setting `application.properties`'s `typescript.angularCodingStyle` to true.
 Default file name example: PojoTest.ts
 Angular file name example: pojo-test.model.ts
 
 *Prefix and Suffix*
+
 You can add a prefix and / or a suffix to append to generated filenames.
 You can configure them into `application.properties`'s `filename.prefix` and `application.properties`'s `filename.suffix`
 Actually Angular coding style and suffix are conflicting, don't mix them please
