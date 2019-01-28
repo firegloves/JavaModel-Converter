@@ -62,7 +62,7 @@ public class ClassListScanner {
         compiler = ToolProvider.getSystemJavaCompiler();
 
         if (null == compiler) {
-            throw new JMCException("Can't get System Java compiler. A possible cause is that your JDK/JRE's tools.jar is not included in the path");
+            throw new JMCException("Can't get System Java compiler. A possible cause is that you are using JRE instead of JDK. Look at this: https://stackoverflow.com/questions/1388690/how-do-i-make-the-jdk-the-default-jre");
         }
     }
 
@@ -194,11 +194,6 @@ public class ClassListScanner {
 
         // write args file
         this.writeJavacArgsFile();
-
-        System.out.println("### COMPILER " + compiler);
-        System.out.println("### compiledDir " + this.compiledDir);
-        System.out.println("### COMPIinputDirLER " + this.inputDir);
-        System.out.println("### javacArgsFilePath " + javacArgsFilePath);
 
         // compile
         compiler.run(null, null, null,

@@ -6,7 +6,25 @@ Java 8+ is required.
 
 ### Launch
 
-Open the project in your IDE, add a Run Configuration and launch it
+**Command line**
+
+You can launch `dist/JavaModel-Converter.jar` from command line.
+You can choose from there parameters:
+
+`-l`, `--lang`: Target transpiling languages
+
+`-s`, `--src`: Java model classes folder path
+
+`-c`, `--compiled`: Java compiled classes folder path
+
+`-g`, `--generated`: Transpiled model classes folder path
+
+Example command: 
+`java -jar JavaModel-Converter.jar -l typescript -s /media/gandalfDrive -c /media/gandalfDrive/compiled -g /media/gandalfDrive/generated`
+
+**IDE**
+
+Open the project in your IDE and launch it
 
 You can make some configurations into application.properties file. It is already setted with a working configuration.
 
