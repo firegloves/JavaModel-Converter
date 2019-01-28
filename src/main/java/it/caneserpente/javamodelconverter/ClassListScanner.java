@@ -60,6 +60,10 @@ public class ClassListScanner {
         // init compiler
         compileFileList = new ArrayList<>();
         compiler = ToolProvider.getSystemJavaCompiler();
+
+        if (null == compiler) {
+            throw new JMCException("Can't get System Java compiler. A possible cause is that your JDK/JRE's tools.jar is not included in the path");
+        }
     }
 
 
@@ -190,6 +194,11 @@ public class ClassListScanner {
 
         // write args file
         this.writeJavacArgsFile();
+
+        System.out.println("### COMPILER " + compiler);
+        System.out.println("### compiledDir " + this.compiledDir);
+        System.out.println("### COMPIinputDirLER " + this.inputDir);
+        System.out.println("### javacArgsFilePath " + javacArgsFilePath);
 
         // compile
         compiler.run(null, null, null,
