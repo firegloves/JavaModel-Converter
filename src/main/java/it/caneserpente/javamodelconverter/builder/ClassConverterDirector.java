@@ -1,8 +1,9 @@
 package it.caneserpente.javamodelconverter.builder;
 
-import it.caneserpente.javamodelconverter.ApplicationConfig;
+import it.caneserpente.javamodelconverter.AppConfig;
 import it.caneserpente.javamodelconverter.ESupportedLanguages;
 import it.caneserpente.javamodelconverter.JavaFieldReader;
+import it.caneserpente.javamodelconverter.LogMessages;
 import it.caneserpente.javamodelconverter.converter.base.AClassConverter;
 import it.caneserpente.javamodelconverter.converter.base.ADatatypeConverter;
 import it.caneserpente.javamodelconverter.converter.typescript.TypescriptClassConverter;
@@ -24,7 +25,7 @@ public class ClassConverterDirector {
      */
     private Map<ESupportedLanguages, Supplier<AClassConverter>> map;
 
-    private ApplicationConfig config;
+    private AppConfig config;
 
     private ESupportedLanguages transpilingLang;
     private List<String> transpilingClassList;
@@ -32,12 +33,12 @@ public class ClassConverterDirector {
     public ClassConverterDirector(List<String> transpilingClassList) {
 
         // load application properties
-        this.config = ApplicationConfig.getInstance();
+        this.config = AppConfig.getInstance();
 
         // transpiling language
         this.transpilingLang = ESupportedLanguages.valueOf(config.getTargetLanguage());
         if (!Arrays.asList(ESupportedLanguages.values()).contains(this.transpilingLang)) {
-            throw new JMCException("Transpiling language unsupported or not recognized");
+            throw new JMCException(LogMessages.ERR_UNSUPPORTED_LANG);
         }
 
         // transpiling class list
@@ -67,7 +68,11 @@ public class ClassConverterDirector {
      * @return the subtype AClassConverter correctly instantiated and composed
      */
     public AClassConverter construct() {
-        return map.get(this.transpilingLang).get();
+        try {
+            return map.get(this.transpilingLang).get();
+        } catch (NullPointerException e) {
+            throw new JMCException(LogMessages.ERR_UNSUPPORTED_LANG);
+        }
     }
 
 

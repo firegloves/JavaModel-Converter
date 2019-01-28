@@ -5,6 +5,7 @@
 
 package it.caneserpente.javamodelconverter;
 
+import it.caneserpente.javamodelconverter.exception.JMCException;
 import org.jetbrains.annotations.Nullable;
 
 import javax.tools.JavaCompiler;
@@ -31,7 +32,7 @@ public class ClassListScanner {
 
     public ClassListScanner() {
 
-        ApplicationConfig config = ApplicationConfig.getInstance();
+        AppConfig config = AppConfig.getInstance();
 
         // input dir
         if (null != config.getTargetJavaClassesDir() && !config.getTargetJavaClassesDir().isEmpty()) {
@@ -39,7 +40,7 @@ public class ClassListScanner {
         }
         this.inputDir = new File(this.inputDirName);
         if (!this.inputDir.exists() || !this.inputDir.isDirectory()) {
-            throw new RuntimeException("Input Dir " + this.inputDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
+            throw new RuntimeException("Input Dir " + this.inputDir.getAbsolutePath() + LogMessages.ERR_SRC_FOLDER);
         }
 
         // compiled dir
@@ -51,7 +52,7 @@ public class ClassListScanner {
             this.compiledDir.mkdirs();
         }
         if (!this.compiledDir.exists() || !this.compiledDir.isDirectory()) {
-            throw new RuntimeException("Compiled Dir " + this.compiledDir.getAbsolutePath() + " does not exists or it is not a directory. Otherwise check for permissions");
+            throw new RuntimeException("Compiled Dir " + this.compiledDir.getAbsolutePath() + LogMessages.ERR_SRC_FOLDER);
         }
 
         this.javacArgsFilePath = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + "argsFile.txt";
@@ -59,6 +60,10 @@ public class ClassListScanner {
         // init compiler
         compileFileList = new ArrayList<>();
         compiler = ToolProvider.getSystemJavaCompiler();
+
+        if (null == compiler) {
+            throw new JMCException("Can't get System Java compiler. A possible cause is that you are using JRE instead of JDK. Look at this: https://stackoverflow.com/questions/1388690/how-do-i-make-the-jdk-the-default-jre");
+        }
     }
 
 
@@ -80,6 +85,10 @@ public class ClassListScanner {
             if (null != clsName && !clsName.isEmpty()) {
                 classNameList.add(clsName);
             }
+        }
+
+        if (classNameList.isEmpty()) {
+            throw new JMCException(LogMessages.ERR_NO_FILES_TO_TRANSPILE + inputDir.getAbsolutePath());
         }
 
         // compile files
