@@ -45,7 +45,19 @@ Transpiling process supports code generation of classes with class members and c
 
 Interface and class code generation is supported. You can configure what to generate into `application.properties`'s `typescript.generateInterface`
 Keep in mind how [interfaces work in Typescript](https://www.typescriptlang.org/docs/handbook/interfaces.html).
-I suggest to use almost always classes to take full advantage of type power.
+I suggest to use almost always classes to take full advantage of type power. This means that to take advantage of Typescript typization when you have a json object (for example in response to an http request) you should create a new instance.
+
+For example in Angular:
+
+`// with a single Foo
+httpService.getFoo().subscribe(fooResponse => {
+    this.foo = new Foo(fooResponse);                            // fooResponse is a JSON object matching Foo class properties
+});
+
+// with an Foo array 
+httpService.getFoo().subscribe(fooArrayResponse => {
+    this.fooArray = fooArrayResponse.map(f => new Foo(f));      // fooArrayResponse is a JSON array of object matching Foo class properties
+});`
 
 *Angular coding style is now supported*
 
