@@ -7,7 +7,7 @@ import static org.jeasy.props.PropertiesInjectorBuilder.aNewPropertiesInjector;
 
 public class ApplicationConfig {
 
-    private static ApplicationConfig instance;
+    private static ApplicationConfig instance = new ApplicationConfig();
 
     @Property(source = "application.properties", key = "target.language")
     private String targetLanguage;
@@ -51,9 +51,6 @@ public class ApplicationConfig {
     }
 
     public static ApplicationConfig getInstance() {
-        if (null == instance) {
-            instance = new ApplicationConfig();
-        }
         return instance;
     }
 
