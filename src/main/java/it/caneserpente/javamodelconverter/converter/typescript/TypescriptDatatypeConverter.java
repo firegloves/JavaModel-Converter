@@ -34,9 +34,18 @@ public class TypescriptDatatypeConverter extends ADatatypeConverter {
             case "java.lang.Float":
             case "long":
             case "java.lang.Long":
+            case "double":
+            case "java.lang.Double":
             case "java.math.BigDecimal":
+            case "java.math.BigInteger":
+            case "byte":
+            case "java.lang.Byte":
+            case "short":
+            case "java.lang.Short":
                 return "number";
 
+            case "char":
+            case "java.lang.Character":
             case "java.lang.String":
                 return "string";
 

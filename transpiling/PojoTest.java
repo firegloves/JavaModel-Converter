@@ -1,6 +1,6 @@
 package it.caneserpente.javamodelconverter;
 
-import java.math.BigDecimal;
+import java.math.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,18 @@ public class PojoTest {
     private Map rawMap;
     private Map<String, Long> paramMap;
     private Map<Long, String> paramReverseMap;
+
+    private char letter;
+    private Character letter2;
+    private double amount;
+    private Double amount2;
+    private double[] amountArray;
+    private BigInteger sum;
+    private byte b;
+    private Byte bigByte;
+    private short little;
+    private Short little2;
+    private List<Short> littleList;
 
     public int getId() {
         return id;

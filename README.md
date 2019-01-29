@@ -73,48 +73,49 @@ Actually Angular coding style and suffix are conflicting, don't mix them please
 
 *Supported Java data types*
 
-- int
-- java.lang.Integer
-- float
-- java.lang.Float
-- long
-- java.lang.Long
-- java.math.BigDecimal
 
-transpiled to *Typescript number*
+| Java                      |      Typescript       | 
+|---------------------------|-----------------------|
+| int                       |                       |
+| java.lang.Integer         |                       |
+| float                     |                       |
+| java.lang.Float           |                       |
+| long                      |                       |
+| java.lang.Long            |                       |
+| java.math.BigDecimal      |       number          |
+| java.math.BigInteger      |                       |
+| double                    |                       |
+| java.lang.Double          |                       |
+| byte                      |                       |
+| java.lang.Byte            |                       |
+| short                     |                       |
+| java.lang.Short           |                       |
+|---------------------------|-----------------------|
+| char                      |                       |
+| java.lang.Character       |       string          |
+| java.lang.String          |                       |
+|---------------------------|-----------------------|
+| java.util.Date            |                       |
+| java.sql.Date             |       Date            |
+| java.sql.Timestamp        |                       |
+|---------------------------|-----------------------|
+| boolean                   |                       |
+| java.lang.Boolean         |       boolean         |
+|---------------------------|-----------------------|
+| arrays                    |                       |
+| java.util.Collection**    |       Array           |
+| java.util.Map***          |                       |
+|---------------------------|-----------------------|
+| Custom data types****     |  Custom data types    |
+|---------------------------|-----------------------|
 
-----------------------
+** java.util.Map, its subinterfaces and implementing types. Raw and parametrized types
 
-- java.lang.String
+*** java.util.Collection, its subinterfaces and implementing types. Raw and parametrized types 
 
-transpiled to *Typescript string*
-
-----------------------
-
-- java.util.Date
-- java.sql.Date
-- java.sql.Timestamp
-
-transpiled to *Typescript Date*
-
-----------------------
-
-- boolean
-- java.lang.Boolean
-
-transpiled to *Typescript boolean*
-
-----------------------
-
-- arrays
-- java.util.Collection, its subinterfaces and implementing types. Raw and parametrized types
-- java.util.Map, its subinterfaces and implementing types. Raw and parametrized types
-
-transpiled to *Typescript Array*
+**** Custom data types included into current transpiling process are now supported
 
 ---------------------
-
-Custom data types included into current transpiling process are now supported
 
 
 ### Contribute
