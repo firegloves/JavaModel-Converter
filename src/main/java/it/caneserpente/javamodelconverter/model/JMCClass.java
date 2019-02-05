@@ -5,6 +5,7 @@ import java.util.List;
 public class JMCClass {
 
     private Class clazz;
+    private String containingFolders;
     private String fileName;
     private String convertedClassName;
     private String convertedConstructorStart;

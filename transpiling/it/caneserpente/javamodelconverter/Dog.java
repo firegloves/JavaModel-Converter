@@ -1,6 +1,7 @@
 package it.caneserpente.javamodelconverter;
 
 import java.util.List;
+import it.caneserpente.javamodelconverter.kennelpkg.Kennel;
 
 public class Dog {
 

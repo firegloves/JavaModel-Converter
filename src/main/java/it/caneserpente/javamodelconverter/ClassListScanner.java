@@ -6,15 +6,20 @@
 package it.caneserpente.javamodelconverter;
 
 import it.caneserpente.javamodelconverter.exception.JMCException;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ClassListScanner {
 
@@ -55,6 +60,7 @@ public class ClassListScanner {
             throw new RuntimeException("Compiled Dir " + this.compiledDir.getAbsolutePath() + LogMessages.ERR_SRC_FOLDER);
         }
 
+        // TODO check if I have a double / also on linux systems
         this.javacArgsFilePath = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + "argsFile.txt";
 
         // init compiler
@@ -71,21 +77,14 @@ public class ClassListScanner {
      * scans inputDir to load all present .java classes
      * for each java class construct its full qualified name and add it to the list to return
      *
-     * @return the list of full qualified names to return
+     * @return the list of full qualified names identified classes
      */
     public List<String> scanForClasses() {
 
         List<String> classNameList = new ArrayList<>();
 
         // scans files
-        String[] fileList = inputDir.list();
-        for (int i = 0; i < fileList.length; i++) {
-
-            String clsName = this.scanJavaFile(fileList[i]);
-            if (null != clsName && !clsName.isEmpty()) {
-                classNameList.add(clsName);
-            }
-        }
+        classNameList = this.scanDir(inputDir.getAbsolutePath());
 
         if (classNameList.isEmpty()) {
             throw new JMCException(LogMessages.ERR_NO_FILES_TO_TRANSPILE + inputDir.getAbsolutePath());
@@ -97,27 +96,53 @@ public class ClassListScanner {
         return classNameList;
     }
 
+    /**
+     * scans received to load all present .java classes
+     *
+     * @return the list of full qualified names identified classes
+     */
+    private List<String> scanDir(String dirToScan) {
+
+        List<String> foundClasses = new ArrayList<>();
+
+        try (Stream<Path> stream = Files.list(Paths.get(dirToScan))) {
+
+            stream.forEach(p -> {
+                        if (Files.isDirectory(p)) {
+                            // scan subfolder
+                            foundClasses.addAll(this.scanDir(p.toString()));
+                        } else if(FilenameUtils.getExtension(p.toString()).equalsIgnoreCase("java")) {
+                            // read classes in this folder
+                            String clsName = this.scanJavaFile(p.toString());
+                            if (null != clsName && !clsName.isEmpty()) {
+                                foundClasses.add(clsName);
+                            }
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return foundClasses;
+    }
+
 
     /**
      * scans a file to create java class full qualified name
      * if full qaulified name is found => compile class
      *
-     * @param fileName the file name to be scanned
+     * @param fileName the file name (with path) to be scanned
      * @return full qualified java class name
      */
     private String scanJavaFile(String fileName) {
 
-        File clsFile = new File(inputDir.getAbsolutePath() + System.getProperty("file.separator") + fileName);
+        System.out.println("# SCANNING FILE " + fileName);
 
-        if (clsFile.isDirectory()) {
-            return null;
-        }
+        String pkg = null, className = null, fullQName = null;
 
-        System.out.println("# SCANNING FILE " + clsFile);
-
-        try (Scanner scanner = new Scanner(clsFile)) {
-
-            String pkg = null, className = null, retVal = null;
+        // with Stream I should reuse them to search for package and then for class name.
+        // because they are designed to be streamed only once I decided to go with dear old Scanner
+        try (Scanner scanner = new Scanner(new File(fileName))) {
 
             // scan file searching for full qualified name
             while (scanner.hasNext()) {
@@ -125,29 +150,29 @@ public class ClassListScanner {
 
                 // TODO GESTIRE CASO IN CUI IL PACKAGE NON SIA PRESENTE???
 
+                // search for pkg
                 if (null == pkg) {
-                    String p = this.findPackage(l);
-                    if (null != p && !p.isEmpty()) {
-                        pkg = p;
-                    }
-                }
-
-                if (null != pkg) {
-                    className = this.findClassName(l);
+                    pkg = this.extractPackage(l);
+                } else {
+                    // search for class' full qualified name
+                    className = this.extractClassName(l);
                     if (null != className && !className.isEmpty()) {
-                        retVal = pkg + "." + className;
+                        fullQName = pkg + "." + className;
+                        break;
                     }
                 }
             }
-
-            this.compileFileList.add(clsFile.getAbsolutePath());
-
-            return retVal;
-
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new JMCException(e);
         }
+
+        if (null == fullQName) {
+            throw new JMCException("Error parsing file: " + fileName);
+        }
+
+        this.compileFileList.add(fileName);
+
+        return fullQName;
     }
 
 
@@ -157,7 +182,7 @@ public class ClassListScanner {
      * @param line
      * @return package name or null
      */
-    private String findPackage(@Nullable String line) {
+    private String extractPackage(String line) {
         return null != line && line.startsWith("package") ? line.replace("package ", "").replace(";", "") : null;
     }
 
@@ -168,7 +193,7 @@ public class ClassListScanner {
      * @param line
      * @return class name or null
      */
-    private String findClassName(@Nullable String line) {
+    private String extractClassName(@Nullable String line) {
 
         String clsName = null;
 
@@ -184,11 +209,8 @@ public class ClassListScanner {
     }
 
 
-
-
     /**
      * compile alla identified java files
-     *
      */
     private void compileClasses() {
 
@@ -207,6 +229,7 @@ public class ClassListScanner {
 
     /**
      * create and save javac argsFile into system temp directory
+     *
      * @return
      */
     private void writeJavacArgsFile() {

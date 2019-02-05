@@ -27,6 +27,9 @@ public class AppConfig {
     @Property(source = "application.properties", key = "filename.suffix")
     private String filenameSuffix;
 
+    @Property(source = "application.properties", key = "flattenPkg")
+    private boolean flattenPkg;
+
     /******************************************************************************
      *                      TYPESCRIPT SPECIFIC CONFIG
      *****************************************************************************/
@@ -121,5 +124,13 @@ public class AppConfig {
 
     public void setFilenameSuffix(String filenameSuffix) {
         this.filenameSuffix = filenameSuffix;
+    }
+
+    public boolean isFlattenPkg() {
+        return flattenPkg;
+    }
+
+    public void setFlattenPkg(boolean flattenPkg) {
+        this.flattenPkg = flattenPkg;
     }
 }

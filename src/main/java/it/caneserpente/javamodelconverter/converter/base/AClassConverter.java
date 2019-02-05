@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -250,4 +251,29 @@ public abstract class AClassConverter {
     }
 
 
+    /**
+     * writes generated class on the fs
+     * @param clz transpiling JMCClass
+     * @param sb StringBuilder containing code to write
+     */
+    protected void writeClassFile(JMCClass clz, StringBuilder sb) {
+
+        File fileToWrite;
+
+        // if needed craetes package subfolders
+        if (! AppConfig.getInstance().isFlattenPkg()) {
+            fileToWrite = new File(this.outputDir.getAbsolutePath() + System.getProperty("file.separator") + clz.getClazz().getPackage().getName().replaceAll("\\.", "/"));
+            fileToWrite.mkdirs();
+        } else {
+            fileToWrite = new File(this.outputDir.getAbsolutePath() + System.getProperty("file.separator"));
+        }
+
+        // writes transpiled file
+        try (PrintWriter writer = new PrintWriter(new File(fileToWrite.getAbsolutePath() + System.getProperty("file.separator") + this.createClassFileName(clz)))) {
+            writer.println(sb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -98,13 +98,8 @@ public class TypescriptClassConverter extends AClassConverter {
         // close class block
         sb.append("}");
 
-        try (PrintWriter writer = new PrintWriter(new File(super.outputDir.getAbsolutePath() + System.getProperty("file.separator") + this.createClassFileName(clz)))) {
-            writer.println(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
+        // write on fs
+        this.writeClassFile(clz, sb);
     }
 
 

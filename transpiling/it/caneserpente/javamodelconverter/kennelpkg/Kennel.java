@@ -1,4 +1,4 @@
-package it.caneserpente.javamodelconverter;
+package it.caneserpente.javamodelconverter.kennelpkg;
 
 public class Kennel {
 
