@@ -128,7 +128,9 @@ public abstract class AClassConverter {
         if (null != fqNameList) {
             for (int i = 0; i < fqNameList.size(); i++) {
                 JMCClass clz = this.loadClass(fqNameList.get(i));
-                clz = this.fieldReader.readClassFields(clz);
+                this.setTypeToGenerate(clz);
+                this.setConstructorNeeded(clz);
+                this.fieldReader.readClassFields(clz);
                 this.convertClass(clz);
             }
         }
@@ -276,4 +278,21 @@ public abstract class AClassConverter {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * defines type to generate into desired transpiling lang (class, interface, enum, etc)
+     * @param clz JMCClass of which set type to generate
+     */
+    protected abstract void setTypeToGenerate(JMCClass clz);
+
+    /**
+     * sets the variable indicating if a constructor is needed into desired transpiling language
+     */
+    protected abstract void setConstructorNeeded(JMCClass clz);
+
+    /**
+     * craetes a string representation of a JMCClass's enum in the desired transpiling lang and returns it
+     * @return a string representation of a JMCClass's enum in the desired transpiling lang
+     */
+    protected abstract String writeEnumConstants(JMCClass clz);
 }

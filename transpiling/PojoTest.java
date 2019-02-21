@@ -31,6 +31,9 @@ public class PojoTest {
     private Short little2;
     private List<Short> littleList;
 
+    private ESuperHeroe superHero;
+    private ESuperPower superPow;
+
     public int getId() {
         return id;
     }

@@ -197,9 +197,9 @@ public class ClassListScanner {
 
         String clsName = null;
 
-        if (null != line && line.contains("class")) {
+        if (null != line && (line.contains("class") || line.contains("enum"))) {
 
-            String[] tokens = line.split("class");
+            String[] tokens = line.split("class|enum");
             if (null != tokens && tokens.length >= 2) {
                 clsName = tokens[1].replace("{", "").trim();
             }
